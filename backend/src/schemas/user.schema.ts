@@ -14,6 +14,18 @@ export class User {
   @Prop({ required: true, default: 'user' })
   role: string; // 'user' | 'admin'
 
+  @Prop({ default: '' })
+  firstName: string;
+
+  @Prop({ default: '' })
+  lastName: string;
+
+  @Prop({ default: '' })
+  nickname: string;
+
+  @Prop({ default: 'primary' })
+  avatarColor: string;
+
   // User Profile
   @Prop({ default: '' })
   profileType: string; // 'student' | 'startup' | 'ngo' | ''

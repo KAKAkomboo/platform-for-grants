@@ -12,13 +12,30 @@ export class AnalyticsService {
   ) {}
 
   async getAdminStats() {
-    // Каркас для отримання статистики
+    const [totalUsers, totalGrants, activeGrants, archivedGrants, categoriesStats] = await Promise.all([
+      this.userModel.countDocuments().exec(),
+      this.grantModel.countDocuments().exec(),
+      this.grantModel.countDocuments({ status: 'active' }).exec(),
+      this.grantModel.countDocuments({ status: 'archived' }).exec(),
+      this.grantModel.aggregate([
+        { $unwind: '$categories' },
+        { $group: { _id: '$categories', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ]).exec()
+    ]);
+
+    const popularCategories = categoriesStats.map((c) => ({
+      category: c._id,
+      count: c.count,
+    }));
+
     return {
-      totalUsers: 0,
-      totalGrants: 0,
-      activeGrants: 0,
-      archivedGrants: 0,
-      popularCategories: [],
+      totalUsers,
+      totalGrants,
+      activeGrants,
+      archivedGrants,
+      popularCategories,
     };
   }
 }

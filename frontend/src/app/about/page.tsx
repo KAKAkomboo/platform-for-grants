@@ -40,26 +40,32 @@ export default function AboutPage() {
             <div className={styles.memberCard}>
               <h3>Володимир</h3>
               <p>Product & Backend</p>
+              <img className={styles.memberPhoto} src="https://static.vecteezy.com/system/resources/thumbnails/007/570/850/small/backend-development-line-icon-vector.jpg" alt="" />
             </div>
             <div className={styles.memberCard}>
               <h3>Ангеліна</h3>
               <p>Design & UX</p>
+              <img className={styles.memberPhoto} src="https://cdn-icons-png.flaticon.com/512/2166/2166796.png" alt="" />
             </div>
             <div className={styles.memberCard}>
               <h3>Руслан</h3>
-              <p>Research & Outreach</p>
+              <p>Product & Research</p>
+              <img className={styles.memberPhoto} src="https://cdn-icons-png.flaticon.com/512/3141/3141343.png" alt="" />
             </div>
             <div className={styles.memberCard}>
               <h3>Ярослав</h3>
               <p>Product & Frontend</p>
+              <img className={styles.memberPhoto} src="https://cdn-icons-png.flaticon.com/512/6943/6943958.png" alt="" />
             </div>
             <div className={styles.memberCard}>
               <h3>Артем</h3>
-              <p>Product & Backend</p>
+              <p>Product & QA</p>
+              <img className={styles.memberPhoto} src="https://cdn-icons-png.flaticon.com/512/3408/3408823.png" alt="" />
             </div>
             <div className={styles.memberCard}>
               <h3>Анастасія</h3>
-              <p>Product & Backend</p>
+              <p>Product & Manager</p>
+              <img className={styles.memberPhoto} src="https://cdn-icons-png.flaticon.com/512/5183/5183505.png" alt="" />
             </div>
           </div>
         </div>

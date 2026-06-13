@@ -5,8 +5,10 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import HomeFooter from "@/components/HomeFooter";
 
+import { apiCall } from "../lib/api";
+
 interface Grant {
-  id: number;
+  id: string | number;
   name: string;
   age: string;
   link: string;
@@ -36,6 +38,7 @@ export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [grants, setGrants] = useState<Grant[]>([]);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
 
   const [newGrant, setNewGrant] = useState<NewGrant>({
     name: "",
@@ -46,16 +49,45 @@ export default function Home() {
     lastName: "",
   });
 
+  const fetchGrants = async () => {
+    try {
+      const data = await apiCall("/grants");
+      const mapped = data.map((g: any) => ({
+        id: g._id,
+        name: g.title,
+        age: g.targetAudience.join(", ") || g.amount || "",
+        link: g.sourceUrl,
+        deadline: g.deadline,
+        firstName: g.firstName || "Адміністратор",
+        lastName: g.lastName || "",
+        authorEmail: g.authorEmail || "",
+      }));
+      setGrants(mapped);
+    } catch (err) {
+      console.error("Помилка завантаження грантів:", err);
+    }
+  };
+
+  const fetchFavorites = async () => {
+    try {
+      const data = await apiCall("/users/favorites");
+      const ids = new Set<string>((data || []).map((g: any) => g._id as string));
+      setFavoriteIds(ids);
+    } catch {
+      // not logged in or no favorites
+    }
+  };
+
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
-    const storedGrants = localStorage.getItem("grants");
-
     const parsedUser: User | null = storedUser ? JSON.parse(storedUser) : null;
-    const parsedGrants: Grant[] = storedGrants ? JSON.parse(storedGrants) : [];
+    setUser(parsedUser);
 
-    if (!isMounted) {
-      setUser(parsedUser);
-      setGrants(parsedGrants);
+    const init = async () => {
+      await fetchGrants();
+      if (parsedUser) {
+        await fetchFavorites();
+      }
       setNewGrant({
         name: "",
         age: "",
@@ -66,10 +98,11 @@ export default function Home() {
       });
       setLoading(false);
       setIsMounted(true);
-    }
-  }, [isMounted, setUser, setGrants, setNewGrant, setLoading, setIsMounted]);
+    };
+    init();
+  }, []);
 
-  const addGrant = () => {
+  const addGrant = async () => {
     if (
       newGrant.name.trim() &&
       newGrant.age.trim() &&
@@ -79,31 +112,71 @@ export default function Home() {
       newGrant.lastName.trim() &&
       user
     ) {
-      const updatedGrants: Grant[] = [
-        ...grants,
-        {
-          ...newGrant,
-          id: Date.now(),
+      try {
+        const backendPayload = {
+          title: newGrant.name,
+          description: `Грант від користувача ${newGrant.firstName} ${newGrant.lastName}`,
+          organizer: `${newGrant.firstName} ${newGrant.lastName}`,
+          deadline: new Date(newGrant.deadline),
+          amount: "за запитом",
+          categories: ["Загальна"],
+          targetAudience: [newGrant.age],
+          sourceUrl: newGrant.link,
           authorEmail: user.email,
-        },
-      ];
-      setGrants(updatedGrants);
-      localStorage.setItem("grants", JSON.stringify(updatedGrants));
-      setNewGrant({
-        name: "",
-        age: "",
-        link: "",
-        deadline: "",
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-      });
+          firstName: newGrant.firstName,
+          lastName: newGrant.lastName,
+          status: "active",
+        };
+
+        await apiCall("/grants", {
+          method: "POST",
+          body: backendPayload,
+        });
+
+        await fetchGrants();
+
+        setNewGrant({
+          name: "",
+          age: "",
+          link: "",
+          deadline: "",
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+        });
+      } catch (err) {
+        console.error("Помилка при додаванні гранту:", err);
+      }
     }
   };
 
-  const deleteGrant = (id: number) => {
-    const updatedGrants = grants.filter((g) => g.id !== id);
-    setGrants(updatedGrants);
-    localStorage.setItem("grants", JSON.stringify(updatedGrants));
+  const deleteGrant = async (id: string | number) => {
+    try {
+      await apiCall(`/grants/${id}`, {
+        method: "DELETE",
+      });
+      await fetchGrants();
+    } catch (err) {
+      console.error("Помилка видалення гранту:", err);
+    }
+  };
+
+  const toggleFavorite = async (grantId: string) => {
+    if (!user) return;
+    if (favoriteIds.has(grantId)) {
+      try {
+        await apiCall(`/users/favorites/${grantId}`, { method: "DELETE" });
+        setFavoriteIds((prev) => { const s = new Set(prev); s.delete(grantId); return s; });
+      } catch (err) {
+        console.error("Помилка видалення з обраного:", err);
+      }
+    } else {
+      try {
+        await apiCall(`/users/favorites/${grantId}`, { method: "POST" });
+        setFavoriteIds((prev) => new Set(prev).add(grantId));
+      } catch (err) {
+        console.error("Помилка додавання до обраного:", err);
+      }
+    }
   };
 
   if (!isMounted) return null;
@@ -405,8 +478,17 @@ export default function Home() {
                       Перейти до гранту →
                     </a>
                   </div>
-                  {user && user.email === grant.authorEmail && (
-                    <div className={styles.grantActions}>
+                  <div className={styles.grantActions}>
+                    {user && (
+                      <button
+                        onClick={() => toggleFavorite(grant.id as string)}
+                        className={favoriteIds.has(grant.id as string) ? styles.deleteBtn : "btn btn-primary"}
+                        title={favoriteIds.has(grant.id as string) ? "Видалити з обраного" : "До обраного"}
+                      >
+                        {favoriteIds.has(grant.id as string) ? "♥ Обрано" : "♡ До обраного"}
+                      </button>
+                    )}
+                    {user && user.email === grant.authorEmail && (
                       <button
                         onClick={() => deleteGrant(grant.id)}
                         className={styles.deleteBtn}
@@ -414,8 +496,8 @@ export default function Home() {
                       >
                         ✕
                       </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               ))
             )}
