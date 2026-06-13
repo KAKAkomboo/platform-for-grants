@@ -1,7 +1,42 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./login.module.css";
+import Footer from "../../components/Footer";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    // Імітація перевірки облікового запису
+    try {
+      // Для простоти: якщо email містить @ та пароль не порожній, дозволяємо вхід
+      if (email.includes("@") && password.length >= 6) {
+        const user = { email, role: "user" };
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        router.push("/dashboard");
+      } else {
+        setError("Невірні дані для входу. Спробуйте ще раз.");
+        setLoading(false);
+      }
+    } catch (err) {
+      setError("Помилка при вході. Спробуйте ще раз.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -23,7 +58,9 @@ export default function LoginPage() {
               <h2>Авторизація користувача</h2>
             </div>
             
-            <form className={styles.form}>
+            {error && <div style={{color: "#d32f2f", marginBottom: 16, padding: 12, background: "#ffebee", borderRadius: 8}}>{error}</div>}
+
+            <form className={styles.form} onSubmit={handleSubmit}>
               <div className={styles.inputGroup}>
                 <label htmlFor="email">Email адреса</label>
                 <input 
@@ -48,7 +85,9 @@ export default function LoginPage() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary">Увійти в кабінет</button>
+              <button type="submit" disabled={loading} className="btn btn-primary">
+                {loading ? "Завантаження..." : "Увійти в кабінет"}
+              </button>
             </form>
 
             <div className={styles.footerLink}>
@@ -57,6 +96,7 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
