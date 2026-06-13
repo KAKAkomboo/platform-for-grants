@@ -481,3 +481,37 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Categories checkboxes */
+.categoriesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.categoryCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid rgba(25, 26, 35, 0.12);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  background: #f8fafb;
+  transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+}
+
+.categoryCheckbox:has(input:checked) {
+  background: #e8f5ed;
+  border-color: var(--primary, #1aaa78);
+  color: var(--primary, #1aaa78);
+  font-weight: 500;
+}
+
+.categoryCheckbox input[type="checkbox"] {
+  accent-color: var(--primary, #1aaa78);
+}

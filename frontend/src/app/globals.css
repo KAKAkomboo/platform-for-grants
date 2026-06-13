@@ -85,6 +85,7 @@ a {
   transition: all 0.2s ease;
   border: var(--border-width) solid var(--border-color);
   text-align: center;
+  white-space: nowrap;
 }
 
 .btn-primary {
@@ -153,4 +154,32 @@ a {
 .card-accent {
   background-color: var(--primary);
   color: var(--text-dark);
+}
+
+/* ===== MOBILE RESPONSIVE GLOBALS ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .btn {
+    padding: 13px 22px;
+    font-size: 0.95rem;
+  }
+
+  .card-positivus {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+
+  .btn {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
 }
