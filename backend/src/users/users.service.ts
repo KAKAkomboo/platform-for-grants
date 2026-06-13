@@ -7,18 +7,34 @@ import { User, UserDocument } from '../schemas/user.schema';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+  async getProfile(userId: string): Promise<any> {
+    const user = await this.userModel.findById(userId).select('-passwordHash').exec();
+    if (!user) {
+      throw new NotFoundException('Користувача не знайдено');
+    }
+    return user;
+  }
+
   async updateProfile(
     userId: string,
-    profileType: string,
-    categories: string[],
+    profileType?: string,
+    categories?: string[],
+    nickname?: string,
+    avatarColor?: string,
+    firstName?: string,
+    lastName?: string,
   ): Promise<UserDocument> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
       throw new NotFoundException('Користувача не знайдено');
     }
 
-    user.profileType = profileType;
-    user.categories = categories;
+    if (profileType !== undefined) user.profileType = profileType;
+    if (categories !== undefined) user.categories = categories;
+    if (nickname !== undefined) user.nickname = nickname;
+    if (avatarColor !== undefined) user.avatarColor = avatarColor;
+    if (firstName !== undefined) user.firstName = firstName;
+    if (lastName !== undefined) user.lastName = lastName;
     return (await user.save()).populate('favorites');
   }
 

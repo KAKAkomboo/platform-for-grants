@@ -7,12 +7,25 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Get('profile')
+  async getProfile(@Request() req) {
+    return this.usersService.getProfile(req.user._id);
+  }
+
   @Put('profile')
   async updateProfile(
     @Request() req,
-    @Body() body: { profileType: string; categories: string[] },
+    @Body() body: { profileType?: string; categories?: string[]; nickname?: string; avatarColor?: string; firstName?: string; lastName?: string },
   ) {
-    return this.usersService.updateProfile(req.user._id, body.profileType, body.categories);
+    return this.usersService.updateProfile(
+      req.user._id,
+      body.profileType,
+      body.categories,
+      body.nickname,
+      body.avatarColor,
+      body.firstName,
+      body.lastName,
+    );
   }
 
   @Post('favorites/:grantId')
