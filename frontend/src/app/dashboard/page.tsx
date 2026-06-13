@@ -19,7 +19,6 @@ export default function DashboardPage() {
   const [editingGrant, setEditingGrant] = useState<any>(null);
 
   useEffect(() => {
-    // Імітація завантаження даних користувача з localStorage
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -27,7 +26,6 @@ export default function DashboardPage() {
       setNickname(parsedUser.nickname || "");
       setAvatarColor(parsedUser.avatarColor || "primary");
     } else {
-      // Якщо користувач не авторизований, перенаправляємо на вхід
       router.push("/login");
     }
 

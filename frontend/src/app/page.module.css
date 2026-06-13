@@ -8,7 +8,7 @@
 /* Header */
 .header {
   background-color: var(--white);
-  padding: 24px 0;
+  padding: 16px 0;
   border-bottom: 1px solid rgba(25, 26, 35, 0.05);
 }
 
@@ -34,7 +34,7 @@
 .authButtons {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 /* Hero Section */
@@ -92,24 +92,27 @@
 
 /* Partners Bar */
 .partners {
-  padding: 40px 0;
+  padding: 32px 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .partnersInner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
-  min-width: 900px;
+  gap: 24px;
+  min-width: 600px;
+  padding: 0 4px;
 }
 
 .partnerLogo {
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #a6a6a6;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* Footer */
@@ -177,97 +180,6 @@
   color: #adadad;
 }
 
-/* Responsive design */
-@media (max-width: 1024px) {
-  .heroTitle {
-    font-size: 3rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .headerInner {
-    flex-direction: column;
-    gap: 20px;
-    align-items: flex-start;
-  }
-  .authButtons {
-    width: 100%;
-    margin-top: 10px;
-  }
-  .authButtons a {
-    flex: 1;
-  }
-  .heroGrid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .heroTitle {
-    font-size: 2.5rem;
-  }
-}
-
-/* Page content helpers */
-.content {
-  max-width: 980px;
-  margin: 48px auto;
-  padding: 0 16px;
-}
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 28px;
-  box-shadow: 0 12px 30px rgba(25,26,35,0.06);
-}
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 24px;
-  align-items: start;
-}
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-.teamGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 18px;
-}
-@media (max-width: 768px) {
-  .teamGrid {
-    grid-template-columns: 1fr;
-  }
-}
-.memberCard {
-  padding: 14px;
-  border-radius: 10px;
-  background: #f8fafb;
-  text-align: center;
-}
-.memberPhoto{
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  margin-bottom: 12px;
-}
-.memberCard h3 { margin: 8px 0 4px; font-size: 1rem; }
-.memberCard p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
-
-.contactForm input,
-.contactForm textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(25,26,35,0.06);
-  margin-bottom: 12px;
-  font-family: var(--font-main);
-}
-.contactForm textarea { min-height: 140px; resize: vertical; }
-.contactInfo p, .contactInfo a { margin: 0 0 10px; color: var(--text-dark); }
-.contactInfo a { color: var(--primary); text-decoration: none; }
-
 /* Grants Section */
 .grantsSection {
   padding: 60px 0;
@@ -302,13 +214,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-  margin-bottom: 16px;
-}
-
-@media (max-width: 768px) {
-  .formRow {
-    grid-template-columns: 1fr;
-  }
+  margin-bottom: 0;
 }
 
 .formGroup label {
@@ -402,9 +308,6 @@
 }
 
 .deleteBtn {
-  position: relative;
-  top: 0;
-  right: 0;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -461,3 +364,208 @@
   text-decoration: underline;
 }
 
+/* Page content helpers */
+.content {
+  max-width: 980px;
+  margin: 48px auto;
+  padding: 0 16px;
+}
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(25,26,35,0.06);
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+.memberCard {
+  padding: 14px;
+  border-radius: 10px;
+  background: #f8fafb;
+  text-align: center;
+}
+.memberPhoto {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+.memberCard h3 { margin: 8px 0 4px; font-size: 1rem; }
+.memberCard p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
+
+.contactForm input,
+.contactForm textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(25,26,35,0.06);
+  margin-bottom: 12px;
+  font-family: var(--font-main);
+  box-sizing: border-box;
+}
+.contactForm textarea { min-height: 140px; resize: vertical; }
+.contactInfo p, .contactInfo a { margin: 0 0 10px; color: var(--text-dark); }
+.contactInfo a { color: var(--primary); text-decoration: none; }
+
+/* ================================
+   MOBILE (max 768px)
+================================ */
+@media (max-width: 768px) {
+  /* Header */
+  .headerInner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .authButtons {
+    gap: 8px;
+  }
+
+  /* Hide email on mobile */
+  .authButtons span {
+    display: none;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 32px 0;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .heroRight {
+    display: none;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+    margin-bottom: 16px;
+  }
+
+  .heroDescription {
+    font-size: 1rem;
+    margin-bottom: 24px;
+    max-width: 100%;
+  }
+
+  .heroCta a {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Partners */
+  .partners {
+    padding: 20px 0;
+  }
+
+  .partnersInner {
+    gap: 20px;
+    min-width: 500px;
+  }
+
+  .partnerLogo {
+    font-size: 0.85rem;
+  }
+
+  /* Grants section */
+  .grantsSection {
+    padding: 32px 0;
+  }
+
+  .grantsSection h2 {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .addGrantCard {
+    padding: 20px 16px;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .grantsList {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .grantCard {
+    padding: 16px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0 24px;
+  }
+
+  .footerInner {
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 24px;
+  }
+
+  .footerLinks {
+    margin-left: 0;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .footerDesc {
+    max-width: 100%;
+  }
+
+  /* Helpers */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teamGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================
+   TABLET (max 1024px)
+================================ */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .heroTitle {
+    font-size: 2.8rem;
+  }
+
+  .heroGrid {
+    gap: 24px;
+  }
+
+  .grantsList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid {
+    grid-template-columns: 1fr 300px;
+  }
+}
