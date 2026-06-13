@@ -1,0 +1,98 @@
+import Link from "next/link";
+import styles from "./page.module.css";
+
+export default function Home() {
+  return (
+    <div className={styles.wrapper}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className="container">
+          <div className={styles.headerInner}>
+            <Link href="/" className={styles.logo}>
+              <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logoIcon}>
+                <rect width="36" height="36" rx="6" fill="#191A23"/>
+                <path d="M10 26V10H16.5C18.9853 10 21 12.0147 21 14.5C21 16.9853 18.9853 19 16.5 19H13V26H10ZM13 16H16.5C17.3284 16 18 15.3284 18 14.5C18 13.6716 17.3284 13 16.5 13H13V16Z" fill="#B9FF66"/>
+                <circle cx="26" cy="22" r="4" fill="#B9FF66"/>
+              </svg>
+              <span>GrantHub UA</span>
+            </Link>
+            <div className={styles.authButtons}>
+              <Link href="/login" className="btn btn-secondary">Вхід</Link>
+              <Link href="/register" className="btn btn-primary">Реєстрація</Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className="container">
+          <div className={styles.heroGrid}>
+            <div className={styles.heroLeft}>
+              <h1 className={styles.heroTitle}>
+                Пошук грантів в Україні став простим
+              </h1>
+              <p className={styles.heroDescription}>
+                Ми автоматично збираємо та структуруємо грантові можливості з десятків ресурсів. Знаходьте фінансування для стартапів, освіти та громадських ініціатив в один клік.
+              </p>
+              <div className={styles.heroCta}>
+                <Link href="/register" className="btn btn-primary">Створити акаунт</Link>
+              </div>
+            </div>
+            <div className={styles.heroRight}>
+              <div className={styles.heroIllustration}>
+                <svg viewBox="0 0 400 350" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.illustrationSvg}>
+                  <rect x="20" y="20" width="360" height="310" rx="30" fill="#F3F3F3" stroke="#191A23" strokeWidth="2" />
+                  <circle cx="200" cy="175" r="100" fill="#B9FF66" stroke="#191A23" strokeWidth="2" />
+                  <rect x="150" y="125" width="100" height="100" rx="15" fill="#191A23" />
+                  <path d="M175 175H225M200 150V200" stroke="#B9FF66" strokeWidth="6" strokeLinecap="round" />
+                  <rect x="40" y="260" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#191A23" strokeWidth="2" />
+                  <text x="55" y="285" fill="#191A23" fontWeight="bold" fontSize="12" fontFamily="inherit">#СТАРТАПИ</text>
+                  <rect x="240" y="50" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#191A23" strokeWidth="2" />
+                  <text x="260" y="75" fill="#191A23" fontWeight="bold" fontSize="12" fontFamily="inherit">#СТУДЕНТИ</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners / Sources Bar */}
+      <section className={styles.partners}>
+        <div className="container">
+          <div className={styles.partnersInner}>
+            <span className={styles.partnerLogo}>Дія.Бізнес</span>
+            <span className={styles.partnerLogo}>House of Europe</span>
+            <span className={styles.partnerLogo}>Ресурсний центр ГУРТ</span>
+            <span className={styles.partnerLogo}>Громадський Простір</span>
+            <span className={styles.partnerLogo}>УФС</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <div className="container">
+          <div className={styles.footerInner}>
+            <div className={styles.footerInfo}>
+              <Link href="/" className={styles.logo}>
+                <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="36" height="36" rx="6" fill="#B9FF66"/>
+                  <path d="M10 26V10H16.5C18.9853 10 21 12.0147 21 14.5C21 16.9853 18.9853 19 16.5 19H13V26H10ZM13 16H16.5C17.3284 16 18 15.3284 18 14.5C18 13.6716 17.3284 13 16.5 13H13V16Z" fill="#191A23"/>
+                  <circle cx="26" cy="22" r="4" fill="#191A23"/>
+                </svg>
+                <span className={styles.footerLogoText}>GrantHub UA</span>
+              </Link>
+              <p className={styles.footerDesc}>
+                Автоматичний агрегатор грантових можливостей в Україні. Зручний інструмент для студентів, стартаперів та некомерційного сектору.
+              </p>
+            </div>
+          </div>
+          <div className={styles.footerBottom}>
+            <p>&copy; {new Date().getFullYear()} GrantHub UA. Створено для хакатону.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
