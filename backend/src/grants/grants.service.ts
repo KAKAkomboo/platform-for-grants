@@ -14,8 +14,11 @@ export class GrantsService {
   async findAll(query: {
     search?: string;
     categories?: string | string[];
+    tags?: string | string[];
     targetAudience?: string;
     status?: string;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
   }) {
     const filter: any = {};
 
@@ -36,11 +39,25 @@ export class GrantsService {
       filter.categories = { $in: cats };
     }
 
+    if (query.tags) {
+      const tgs = Array.isArray(query.tags)
+        ? query.tags
+        : [query.tags];
+      filter.tags = { $in: tgs };
+    }
+
     if (query.targetAudience) {
       filter.targetAudience = query.targetAudience;
     }
 
-    return this.grantModel.find(filter).sort({ createdAt: -1 }).exec();
+    const sortConfig: any = {};
+    if (query.sortBy) {
+      sortConfig[query.sortBy] = query.sortOrder === 'asc' ? 1 : -1;
+    } else {
+      sortConfig.createdAt = -1; // default
+    }
+
+    return this.grantModel.find(filter).sort(sortConfig).exec();
   }
 
   async findOne(id: string) {
