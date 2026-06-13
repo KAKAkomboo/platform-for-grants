@@ -389,7 +389,7 @@ export default function Home() {
               currentGrants.map((grant) => (
                 <div key={grant.id} className={styles.grantCard}>
                   <div className={styles.grantHeader}>
-                    <h4>{grant.name}</h4>
+                    <h4><Link href={`/grants/${grant.id}`}>{grant.name}</Link></h4>
                     <div className={styles.grantActions}>
                       {user && (
                         <button
