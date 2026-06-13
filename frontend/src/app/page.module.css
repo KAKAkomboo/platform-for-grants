@@ -185,6 +185,212 @@
   color: #adadad;
 }
 
+/* Responsive design */
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Header */
+  .header {
+    padding: 14px 0;
+  }
+  .headerInner {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    font-size: 1.2rem;
+    gap: 8px;
+  }
+  .authButtons {
+    margin-left: auto;
+    gap: 8px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 40px 0;
+  }
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .heroTitle {
+    font-size: 2.4rem;
+  }
+  .heroDescription {
+    font-size: 1.1rem;
+    margin-bottom: 28px;
+    max-width: 100%;
+  }
+  .heroRight {
+    order: -1;
+  }
+  .heroIllustration {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  /* Grants section */
+  .grantsSection {
+    padding: 40px 0;
+  }
+  .grantsSection h2 {
+    font-size: 1.6rem;
+    margin-bottom: 28px;
+  }
+  .grantsList {
+    grid-template-columns: 1fr;
+  }
+  .grantCard {
+    padding: 16px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0 24px;
+    border-radius: 20px 20px 0 0;
+  }
+  .footerInner {
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .footerLinks {
+    margin-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 24px;
+    width: 100%;
+  }
+  .footerDesc {
+    max-width: 100%;
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Header: show only icon on very small screens */
+  .header .logo span {
+    display: none;
+  }
+  .logo {
+    font-size: 1rem;
+  }
+
+  /* Footer mobile optimization */
+  .footer {
+    padding: 32px 0 20px;
+  }
+  .footerInner {
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .footerLinks {
+    gap: 20px;
+  }
+  .footerBottom {
+    padding-top: 20px;
+  }
+
+  /* Hero */
+  .heroTitle {
+    font-size: 1.9rem;
+    margin-bottom: 18px;
+  }
+  .heroDescription {
+    font-size: 1rem;
+    margin-bottom: 22px;
+  }
+  .heroCta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Add grant form */
+  .addGrantCard {
+    padding: 20px 16px;
+  }
+
+  /* Grant card actions */
+  .grantActions {
+    position: static;
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .grantContent {
+    padding-right: 0;
+  }
+}
+
+/* Page content helpers */
+.content {
+  max-width: 980px;
+  margin: 48px auto;
+  padding: 0 16px;
+}
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(25,26,35,0.06);
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+@media (max-width: 768px) {
+  .teamGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.memberCard {
+  padding: 14px;
+  border-radius: 10px;
+  background: #f8fafb;
+  text-align: center;
+}
+.memberPhoto{
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+.memberCard h3 { margin: 8px 0 4px; font-size: 1rem; }
+.memberCard p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
+
+.contactForm input,
+.contactForm textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(25,26,35,0.06);
+  margin-bottom: 12px;
+  font-family: var(--font-main);
+}
+.contactForm textarea { min-height: 140px; resize: vertical; }
+.contactInfo p, .contactInfo a { margin: 0 0 10px; color: var(--text-dark); }
+.contactInfo a { color: var(--primary); text-decoration: none; }
 /* Grants Section */
 .grantsSection {
   padding: 60px 0;
