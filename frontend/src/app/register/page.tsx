@@ -1,7 +1,65 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./register.module.css";
+import CustomSelect from "../../components/CustomSelect";
+import Footer from "../../components/Footer";
+import { apiCall } from "../../lib/api";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const firstName = formData.get("firstName") as string;
+    const lastName = formData.get("lastName") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+    const role = formData.get("role") as string;
+
+    if (password !== confirmPassword) {
+      setError("Паролі не совпадають.");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Пароль повинен мати мінімум 6 символів.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // 1. Register user on backend
+      await apiCall("/auth/register", {
+        method: "POST",
+        body: { email, password, firstName, lastName, role },
+      });
+
+      // 2. Perform auto-login to retrieve token and user data
+      const loginRes = await apiCall("/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
+
+      localStorage.setItem("token", loginRes.token);
+      localStorage.setItem("currentUser", JSON.stringify(loginRes));
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Помилка при реєстрації. Спробуйте ще раз.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -23,7 +81,9 @@ export default function RegisterPage() {
               <h2>Створення облікового запису</h2>
             </div>
             
-            <form className={styles.form}>
+            {error && <div style={{color: "#d32f2f", marginBottom: 16, padding: 12, background: "#ffebee", borderRadius: 8}}>{error}</div>}
+
+            <form className={styles.form} onSubmit={handleSubmit}>
               <div className={styles.inputGroup}>
                 <label htmlFor="email">Email адреса</label>
                 <input 
@@ -38,11 +98,41 @@ export default function RegisterPage() {
 
               <div className={styles.inputGroup}>
                 <label htmlFor="role">Хто ви?</label>
-                <select id="role" name="role" required className={styles.select}>
-                  <option value="student">🎓 Студент / Освітній проєкт</option>
-                  <option value="startup">🚀 Стартап / Малий бізнес</option>
-                  <option value="ngo">🤝 Громадська організація (ГО)</option>
-                </select>
+                <CustomSelect
+                  id="role"
+                  name="role"
+                  defaultValue="student"
+                  required
+                  options={[
+                    { value: "student", label: "Студент / Освітній проєкт" },
+                    { value: "startup", label: "Стартап / Малий бізнес" },
+                    { value: "ngo", label: "Громадська організація (ГО)" },
+                  ]}
+                />
+              </div>
+
+              <div className={styles.inputGroup}>
+                <label htmlFor="firstName">Ім'я</label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  name="firstName" 
+                  placeholder="Ваше ім'я" 
+                  required 
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.inputGroup}>
+                <label htmlFor="lastName">Прізвище</label>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  name="lastName" 
+                  placeholder="Ваше прізвище" 
+                  required 
+                  className={styles.input}
+                />
               </div>
 
               <div className={styles.inputGroup}>
@@ -69,7 +159,9 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary">Зареєструватися</button>
+              <button type="submit" disabled={loading} className="btn btn-primary">
+                {loading ? "Завантаження..." : "Зареєструватися"}
+              </button>
             </form>
 
             <div className={styles.footerLink}>
@@ -78,6 +170,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
