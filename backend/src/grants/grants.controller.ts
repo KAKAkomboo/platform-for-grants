@@ -7,7 +7,7 @@ export class GrantsController {
   constructor(private readonly grantsService: GrantsService) {}
 
   @Get()
-  async findAll(@Query() query: { search?: string; categories?: string | string[]; targetAudience?: string; status?: string }) {
+  async findAll(@Query() query: { search?: string; categories?: string | string[]; tags?: string | string[]; targetAudience?: string; status?: string; sortBy?: string; sortOrder?: 'asc' | 'desc' }) {
     return this.grantsService.findAll(query);
   }
 
