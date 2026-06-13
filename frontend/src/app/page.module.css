@@ -268,21 +268,39 @@
   }
   .footerLinks {
     margin-left: 0;
-    gap: 28px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 24px;
+    width: 100%;
   }
   .footerDesc {
     max-width: 100%;
+    margin-top: 16px;
   }
 }
 
 @media (max-width: 480px) {
   /* Header: show only icon on very small screens */
-  .logo span {
+  .header .logo span {
     display: none;
   }
   .logo {
     font-size: 1rem;
+  }
+
+  /* Footer mobile optimization */
+  .footer {
+    padding: 32px 0 20px;
+  }
+  .footerInner {
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .footerLinks {
+    gap: 20px;
+  }
+  .footerBottom {
+    padding-top: 20px;
   }
 
   /* Hero */
