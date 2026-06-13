@@ -19,6 +19,8 @@ export default function RegisterPage() {
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
+    const firstName = formData.get("firstName") as string;
+    const lastName = formData.get("lastName") as string;
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
     const role = formData.get("role") as string;
@@ -37,7 +39,13 @@ export default function RegisterPage() {
 
     // Імітація реєстрації
     try {
-      const user = { email, role, registeredAt: new Date().toISOString() };
+      const user = { 
+        email, 
+        firstName, 
+        lastName, 
+        role, 
+        registeredAt: new Date().toISOString() 
+      };
       localStorage.setItem("currentUser", JSON.stringify(user));
       router.push("/dashboard");
     } catch (err) {
@@ -94,6 +102,30 @@ export default function RegisterPage() {
                     { value: "startup", label: "Стартап / Малий бізнес" },
                     { value: "ngo", label: "Громадська організація (ГО)" },
                   ]}
+                />
+              </div>
+
+              <div className={styles.inputGroup}>
+                <label htmlFor="firstName">Ім'я</label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  name="firstName" 
+                  placeholder="Ваше ім'я" 
+                  required 
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.inputGroup}>
+                <label htmlFor="lastName">Прізвище</label>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  name="lastName" 
+                  placeholder="Ваше прізвище" 
+                  required 
+                  className={styles.input}
                 />
               </div>
 

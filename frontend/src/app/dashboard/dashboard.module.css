@@ -366,3 +366,118 @@
 .buttonGroup button {
   flex: 1;
 }
+
+/* My Grants Styles */
+.myGrantsList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.myGrantCard {
+  background: #f8fafb;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(25, 26, 35, 0.04);
+}
+
+.grantInfo {
+  margin-bottom: 16px;
+}
+
+.myGrantCard h3 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+}
+
+.myGrantCard p {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.myGrantCard p strong {
+  color: var(--text-dark);
+}
+
+.myGrantCard a {
+  color: #7a8b99;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.myGrantCard a:hover {
+  color: #5a6b79;
+}
+
+.grantActions {
+  display: flex;
+  gap: 12px;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.editBtn {
+  background-color: #e8f5ed;
+  color: var(--primary);
+  flex: 1;
+}
+
+.editBtn:hover {
+  background-color: #d0f0e0;
+}
+
+.deleteBtn {
+  background-color: #ffe0e0;
+  color: #c92a2a;
+  flex: 1;
+}
+
+.deleteBtn:hover {
+  background-color: #ffc9c9;
+}
+
+.editGrantForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editGrantForm input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(25, 26, 35, 0.1);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.editGrantForm input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26, 170, 120, 0.12);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}

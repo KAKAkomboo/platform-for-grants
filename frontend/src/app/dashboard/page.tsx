@@ -14,6 +14,9 @@ export default function DashboardPage() {
   const [nickname, setNickname] = useState("");
   const [avatarColor, setAvatarColor] = useState("primary");
   const [editMode, setEditMode] = useState(false);
+  const [grants, setGrants] = useState<any[]>([]);
+  const [editingGrantId, setEditingGrantId] = useState<number | null>(null);
+  const [editingGrant, setEditingGrant] = useState<any>(null);
 
   useEffect(() => {
     // Імітація завантаження даних користувача з localStorage
@@ -27,6 +30,12 @@ export default function DashboardPage() {
       // Якщо користувач не авторизований, перенаправляємо на вхід
       router.push("/login");
     }
+
+    const storedGrants = localStorage.getItem("grants");
+    if (storedGrants) {
+      setGrants(JSON.parse(storedGrants));
+    }
+    
     setLoading(false);
   }, [router]);
 
@@ -44,6 +53,34 @@ export default function DashboardPage() {
 
   const handleMenuClick = (view: string) => {
     setActiveView(view);
+  };
+
+  const startEditGrant = (grant: any) => {
+    setEditingGrantId(grant.id);
+    setEditingGrant({ ...grant });
+  };
+
+  const saveEditGrant = () => {
+    if (editingGrant) {
+      const updatedGrants = grants.map((g) =>
+        g.id === editingGrantId ? editingGrant : g
+      );
+      setGrants(updatedGrants);
+      localStorage.setItem("grants", JSON.stringify(updatedGrants));
+      setEditingGrantId(null);
+      setEditingGrant(null);
+    }
+  };
+
+  const cancelEditGrant = () => {
+    setEditingGrantId(null);
+    setEditingGrant(null);
+  };
+
+  const deleteGrant = (id: number) => {
+    const updatedGrants = grants.filter((g) => g.id !== id);
+    setGrants(updatedGrants);
+    localStorage.setItem("grants", JSON.stringify(updatedGrants));
   };
 
   if (loading) {
@@ -158,10 +195,153 @@ export default function DashboardPage() {
               {activeView === "favorites" && (
                 <div className={styles.card}>
                   <h1>Мої гранти</h1>
-                  <p>
-                    У вас немає грантів. Приступіть до пошуку та
-                    додавайте цікаві вам гранти до вашої колекції.
-                  </p>
+                  {grants.filter((g) => g.authorEmail === user.email).length === 0 ? (
+                    <p>
+                      У вас немає грантів. Перейдіть на головну сторінку, щоб додати перший грант.
+                    </p>
+                  ) : (
+                    <div className={styles.myGrantsList}>
+                      {grants
+                        .filter((g) => g.authorEmail === user.email)
+                        .map((grant) => (
+                          <div key={grant.id} className={styles.myGrantCard}>
+                            {editingGrantId === grant.id ? (
+                              <div className={styles.editGrantForm}>
+                                <div className={styles.formRow}>
+                                  <input
+                                    type="text"
+                                    placeholder="Назва гранту"
+                                    value={editingGrant.name}
+                                    onChange={(e) =>
+                                      setEditingGrant({
+                                        ...editingGrant,
+                                        name: e.target.value,
+                                      })
+                                    }
+                                    className={styles.input}
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Вік"
+                                    value={editingGrant.age}
+                                    onChange={(e) =>
+                                      setEditingGrant({
+                                        ...editingGrant,
+                                        age: e.target.value,
+                                      })
+                                    }
+                                    className={styles.input}
+                                  />
+                                </div>
+                                <input
+                                  type="url"
+                                  placeholder="Посилання"
+                                  value={editingGrant.link}
+                                  onChange={(e) =>
+                                    setEditingGrant({
+                                      ...editingGrant,
+                                      link: e.target.value,
+                                    })
+                                  }
+                                  className={styles.input}
+                                />
+                                <input
+                                  type="date"
+                                  value={editingGrant.deadline}
+                                  onChange={(e) =>
+                                    setEditingGrant({
+                                      ...editingGrant,
+                                      deadline: e.target.value,
+                                    })
+                                  }
+                                  className={styles.input}
+                                />
+                                <div className={styles.formRow}>
+                                  <input
+                                    type="text"
+                                    placeholder="Прізвище"
+                                    value={editingGrant.lastName}
+                                    onChange={(e) =>
+                                      setEditingGrant({
+                                        ...editingGrant,
+                                        lastName: e.target.value,
+                                      })
+                                    }
+                                    className={styles.input}
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Ім'я"
+                                    value={editingGrant.firstName}
+                                    onChange={(e) =>
+                                      setEditingGrant({
+                                        ...editingGrant,
+                                        firstName: e.target.value,
+                                      })
+                                    }
+                                    className={styles.input}
+                                  />
+                                </div>
+                                <div className={styles.buttonGroup}>
+                                  <button
+                                    onClick={saveEditGrant}
+                                    className="btn btn-primary"
+                                  >
+                                    Зберегти
+                                  </button>
+                                  <button
+                                    onClick={cancelEditGrant}
+                                    className="btn btn-secondary"
+                                  >
+                                    Скасувати
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className={styles.grantInfo}>
+                                  <h3>{grant.name}</h3>
+                                  <p>
+                                    <strong>Вік:</strong> {grant.age}
+                                  </p>
+                                  <p>
+                                    <strong>До:</strong>{" "}
+                                    {new Date(grant.deadline).toLocaleDateString(
+                                      "uk-UA"
+                                    )}
+                                  </p>
+                                  <p>
+                                    <strong>Автор:</strong> {grant.firstName}{" "}
+                                    {grant.lastName}
+                                  </p>
+                                  <a
+                                    href={grant.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    Посилання →
+                                  </a>
+                                </div>
+                                <div className={styles.grantActions}>
+                                  <button
+                                    onClick={() => startEditGrant(grant)}
+                                    className={styles.editBtn}
+                                  >
+                                    Редагувати
+                                  </button>
+                                  <button
+                                    onClick={() => deleteGrant(grant.id)}
+                                    className={styles.deleteBtn}
+                                  >
+                                    Видалити
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               )}
 

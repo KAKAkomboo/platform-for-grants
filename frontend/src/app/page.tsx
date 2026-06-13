@@ -3,36 +3,100 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
-import HomeFooter from "../components/HomeFooter";
+import HomeFooter from "@/components/HomeFooter";
+
+interface Grant {
+  id: number;
+  name: string;
+  age: string;
+  link: string;
+  deadline: string;
+  firstName: string;
+  lastName: string;
+  authorEmail: string;
+}
+
+interface User {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+interface NewGrant {
+  name: string;
+  age: string;
+  link: string;
+  deadline: string;
+  firstName: string;
+  lastName: string;
+}
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [grants, setGrants] = useState<any[]>([]);
-  const [newGrant, setNewGrant] = useState({ name: "", age: "", link: "" });
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [grants, setGrants] = useState<Grant[]>([]);
+
+  const [newGrant, setNewGrant] = useState<NewGrant>({
+    name: "",
+    age: "",
+    link: "",
+    deadline: "",
+    firstName: "",
+    lastName: "",
+  });
 
   useEffect(() => {
-    setIsMounted(true);
     const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    
     const storedGrants = localStorage.getItem("grants");
-    if (storedGrants) {
-      setGrants(JSON.parse(storedGrants));
+
+    const parsedUser: User | null = storedUser ? JSON.parse(storedUser) : null;
+    const parsedGrants: Grant[] = storedGrants ? JSON.parse(storedGrants) : [];
+
+    if (!isMounted) {
+      setUser(parsedUser);
+      setGrants(parsedGrants);
+      setNewGrant({
+        name: "",
+        age: "",
+        link: "",
+        deadline: "",
+        firstName: parsedUser?.firstName || "",
+        lastName: parsedUser?.lastName || "",
+      });
+      setLoading(false);
+      setIsMounted(true);
     }
-    
-    setLoading(false);
-  }, []);
+  }, [isMounted, setUser, setGrants, setNewGrant, setLoading, setIsMounted]);
 
   const addGrant = () => {
-    if (newGrant.name.trim() && newGrant.age.trim() && newGrant.link.trim()) {
-      const updatedGrants = [...grants, { ...newGrant, id: Date.now() }];
+    if (
+      newGrant.name.trim() &&
+      newGrant.age.trim() &&
+      newGrant.link.trim() &&
+      newGrant.deadline.trim() &&
+      newGrant.firstName.trim() &&
+      newGrant.lastName.trim() &&
+      user
+    ) {
+      const updatedGrants: Grant[] = [
+        ...grants,
+        {
+          ...newGrant,
+          id: Date.now(),
+          authorEmail: user.email,
+        },
+      ];
       setGrants(updatedGrants);
       localStorage.setItem("grants", JSON.stringify(updatedGrants));
-      setNewGrant({ name: "", age: "", link: "" });
+      setNewGrant({
+        name: "",
+        age: "",
+        link: "",
+        deadline: "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+      });
     }
   };
 
@@ -51,23 +115,41 @@ export default function Home() {
         <div className="container">
           <div className={styles.headerInner}>
             <Link href="/" className={styles.logo}>
-              <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logoIcon}>
-                <rect width="36" height="36" rx="6" fill="#191A23"/>
-                <path d="M10 26V10H16.5C18.9853 10 21 12.0147 21 14.5C21 16.9853 18.9853 19 16.5 19H13V26H10ZM13 16H16.5C17.3284 16 18 15.3284 18 14.5C18 13.6716 17.3284 13 16.5 13H13V16Z" fill="#B9FF66"/>
-                <circle cx="26" cy="22" r="4" fill="#B9FF66"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 36 36"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={styles.logoIcon}
+              >
+                <rect width="36" height="36" rx="6" fill="#191A23" />
+                <path
+                  d="M10 26V10H16.5C18.9853 10 21 12.0147 21 14.5C21 16.9853 18.9853 19 16.5 19H13V26H10ZM13 16H16.5C17.3284 16 18 15.3284 18 14.5C18 13.6716 17.3284 13 16.5 13H13V16Z"
+                  fill="#B9FF66"
+                />
+                <circle cx="26" cy="22" r="4" fill="#B9FF66" />
               </svg>
               <span>GrantHub UA</span>
             </Link>
             <div className={styles.authButtons}>
               {!loading && user ? (
                 <>
-                  <span style={{marginRight: 16, fontWeight: 500}}>{user.email}</span>
-                  <Link href="/dashboard" className="btn btn-primary">Мій кабінет</Link>
+                  <span style={{ marginRight: 16, fontWeight: 500 }}>
+                    {user.email}
+                  </span>
+                  <Link href="/dashboard" className="btn btn-primary">
+                    Мій кабінет
+                  </Link>
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="btn btn-secondary">Вхід</Link>
-                  <Link href="/register" className="btn btn-primary">Реєстрація</Link>
+                  <Link href="/login" className="btn btn-secondary">
+                    Вхід
+                  </Link>
+                  <Link href="/register" className="btn btn-primary">
+                    Реєстрація
+                  </Link>
                 </>
               )}
             </div>
@@ -84,27 +166,102 @@ export default function Home() {
                 Пошук грантів в Україні став простим
               </h1>
               <p className={styles.heroDescription}>
-                Ми автоматично збираємо та структуруємо грантові можливості з десятків ресурсів. Знаходьте фінансування для стартапів, освіти та громадських ініціатив в один клік.
+                Ми автоматично збираємо та структуруємо грантові можливості з
+                десятків ресурсів. Знаходьте фінансування для стартапів, освіти
+                та громадських ініціатив в один клік.
               </p>
               <div className={styles.heroCta}>
                 {!loading && user ? (
-                  <Link href="/dashboard" className="btn btn-primary">Переглянути гранти</Link>
+                  <Link href="/dashboard" className="btn btn-primary">
+                    Переглянути гранти
+                  </Link>
                 ) : (
-                  <Link href="/register" className="btn btn-primary">Створити акаунт</Link>
+                  <Link href="/register" className="btn btn-primary">
+                    Створити акаунт
+                  </Link>
                 )}
               </div>
             </div>
             <div className={styles.heroRight}>
               <div className={styles.heroIllustration}>
-                <svg viewBox="0 0 400 350" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.illustrationSvg}>
-                  <rect x="20" y="20" width="360" height="310" rx="30" fill="#F3F3F3" stroke="#191A23" strokeWidth="2" />
-                  <circle cx="200" cy="175" r="100" fill="#B9FF66" stroke="#191A23" strokeWidth="2" />
-                  <rect x="150" y="125" width="100" height="100" rx="15" fill="#191A23" />
-                  <path d="M175 175H225M200 150V200" stroke="#B9FF66" strokeWidth="6" strokeLinecap="round" />
-                  <rect x="40" y="260" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#191A23" strokeWidth="2" />
-                  <text x="55" y="285" fill="#191A23" fontWeight="bold" fontSize="12" fontFamily="inherit">#СТАРТАПИ</text>
-                  <rect x="240" y="50" width="120" height="40" rx="10" fill="#FFFFFF" stroke="#191A23" strokeWidth="2" />
-                  <text x="260" y="75" fill="#191A23" fontWeight="bold" fontSize="12" fontFamily="inherit">#СТУДЕНТИ</text>
+                <svg
+                  viewBox="0 0 400 350"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={styles.illustrationSvg}
+                >
+                  <rect
+                    x="20"
+                    y="20"
+                    width="360"
+                    height="310"
+                    rx="30"
+                    fill="#F3F3F3"
+                    stroke="#191A23"
+                    strokeWidth="2"
+                  />
+                  <circle
+                    cx="200"
+                    cy="175"
+                    r="100"
+                    fill="#B9FF66"
+                    stroke="#191A23"
+                    strokeWidth="2"
+                  />
+                  <rect
+                    x="150"
+                    y="125"
+                    width="100"
+                    height="100"
+                    rx="15"
+                    fill="#191A23"
+                  />
+                  <path
+                    d="M175 175H225M200 150V200"
+                    stroke="#B9FF66"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                  <rect
+                    x="40"
+                    y="260"
+                    width="120"
+                    height="40"
+                    rx="10"
+                    fill="#FFFFFF"
+                    stroke="#191A23"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x="55"
+                    y="285"
+                    fill="#191A23"
+                    fontWeight="bold"
+                    fontSize="12"
+                    fontFamily="inherit"
+                  >
+                    #СТАРТАПИ
+                  </text>
+                  <rect
+                    x="240"
+                    y="50"
+                    width="120"
+                    height="40"
+                    rx="10"
+                    fill="#FFFFFF"
+                    stroke="#191A23"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x="260"
+                    y="75"
+                    fill="#191A23"
+                    fontWeight="bold"
+                    fontSize="12"
+                    fontFamily="inherit"
+                  >
+                    #СТУДЕНТИ
+                  </text>
                 </svg>
               </div>
             </div>
@@ -130,48 +287,95 @@ export default function Home() {
         <div className="container">
           <h2>Список грантів</h2>
 
-          {/* Add Grant Form */}
-          <div className={styles.addGrantCard}>
-            <h3>Додати новий грант</h3>
-            <div className={styles.formGroup}>
-              <input
-                type="text"
-                placeholder="Назва гранту"
-                value={newGrant.name}
-                onChange={(e) =>
-                  setNewGrant({ ...newGrant, name: e.target.value })
-                }
-                className={styles.input}
-              />
+          {!loading && user ? (
+            <div className={styles.addGrantCard}>
+              <h3>Додати новий грант</h3>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Назва гранту"
+                    value={newGrant.name}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, name: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Вік"
+                    value={newGrant.age}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, age: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+              <div className={styles.formGroup}>
+                <input
+                  type="url"
+                  placeholder="Посилання на грант"
+                  value={newGrant.link}
+                  onChange={(e) =>
+                    setNewGrant({ ...newGrant, link: e.target.value })
+                  }
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>До коли подавати заявку</label>
+                  <input
+                    type="date"
+                    value={newGrant.deadline}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, deadline: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Прізвище"
+                    value={newGrant.lastName}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, lastName: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Ім'я"
+                    value={newGrant.firstName}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, firstName: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+              <button onClick={addGrant} className="btn btn-primary">
+                Додати грант
+              </button>
             </div>
-            <div className={styles.formGroup}>
-              <input
-                type="text"
-                placeholder="Вік"
-                value={newGrant.age}
-                onChange={(e) =>
-                  setNewGrant({ ...newGrant, age: e.target.value })
-                }
-                className={styles.input}
-              />
+          ) : (
+            <div className={styles.loginPrompt}>
+              <p>
+                Щоб додавати гранти, будь ласка,{" "}
+                <Link href="/login">увійдіть</Link> або{" "}
+                <Link href="/register">зареєструйтеся</Link>
+              </p>
             </div>
-            <div className={styles.formGroup}>
-              <input
-                type="url"
-                placeholder="Посилання на грант"
-                value={newGrant.link}
-                onChange={(e) =>
-                  setNewGrant({ ...newGrant, link: e.target.value })
-                }
-                className={styles.input}
-              />
-            </div>
-            <button onClick={addGrant} className="btn btn-primary">
-              Додати грант
-            </button>
-          </div>
+          )}
 
-          {/* Grants List */}
           <div className={styles.grantsList}>
             {grants.length === 0 ? (
               <p className={styles.emptyState}>
@@ -185,6 +389,13 @@ export default function Home() {
                     <p className={styles.grantAge}>
                       <strong>Вік:</strong> {grant.age}
                     </p>
+                    <p className={styles.grantDeadline}>
+                      <strong>До:</strong>{" "}
+                      {new Date(grant.deadline).toLocaleDateString("uk-UA")}
+                    </p>
+                    <p className={styles.grantAuthor}>
+                      <strong>Автор:</strong> {grant.firstName} {grant.lastName}
+                    </p>
                     <a
                       href={grant.link}
                       target="_blank"
@@ -194,13 +405,17 @@ export default function Home() {
                       Перейти до гранту →
                     </a>
                   </div>
-                  <button
-                    onClick={() => deleteGrant(grant.id)}
-                    className={styles.deleteBtn}
-                    title="Видалити грант"
-                  >
-                    ✕
-                  </button>
+                  {user && user.email === grant.authorEmail && (
+                    <div className={styles.grantActions}>
+                      <button
+                        onClick={() => deleteGrant(grant.id)}
+                        className={styles.deleteBtn}
+                        title="Видалити грант"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             )}
