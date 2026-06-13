@@ -16,6 +16,7 @@ interface GrantDetail {
   amount: string;
   categories: string[];
   targetAudience: string[];
+  tags: string[];
   sourceUrl: string;
   viewsCount: number;
   firstName?: string;
@@ -102,9 +103,17 @@ export default function GrantDetailsPage() {
                   <span key={idx} className={styles.badge}>#{cat}</span>
                 ))}
                 {grant.targetAudience?.map((aud, idx) => (
-                  <span key={idx} className={styles.badge}>👨‍👩‍👧 {aud}</span>
+                  <span key={idx} className={styles.badge}>👥 {aud}</span>
                 ))}
               </div>
+
+              {grant.tags && grant.tags.length > 0 && (
+                <div className={styles.tagsRow}>
+                  {grant.tags.map((tag, idx) => (
+                    <span key={idx} className={styles.tagBadge}>#{tag}</span>
+                  ))}
+                </div>
+              )}
 
               <div className={styles.section}>
                 <h3>Про грант</h3>
