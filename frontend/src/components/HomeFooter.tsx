@@ -34,6 +34,7 @@ export default function HomeFooter() {
               <h4>Ресурси</h4>
               <ul>
                 <li><Link href="/guide">Керівництво</Link></li>
+                <li><Link href="/saper">🎮 Грати в Сапера</Link></li>
               </ul>
             </div>
           </div>
