@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./login.module.css";
 import Footer from "../../components/Footer";
+import { apiCall } from "../../lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,19 +21,16 @@ export default function LoginPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // Імітація перевірки облікового запису
     try {
-      // Для простоти: якщо email містить @ та пароль не порожній, дозволяємо вхід
-      if (email.includes("@") && password.length >= 6) {
-        const user = { email, role: "user" };
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        router.push("/dashboard");
-      } else {
-        setError("Невірні дані для входу. Спробуйте ще раз.");
-        setLoading(false);
-      }
-    } catch (err) {
-      setError("Помилка при вході. Спробуйте ще раз.");
+      const loginRes = await apiCall("/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
+      localStorage.setItem("token", loginRes.token);
+      localStorage.setItem("currentUser", JSON.stringify(loginRes));
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Невірні дані для входу. Спробуйте ще раз.");
       setLoading(false);
     }
   };

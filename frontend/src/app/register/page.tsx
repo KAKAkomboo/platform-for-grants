@@ -6,6 +6,7 @@ import Link from "next/link";
 import styles from "./register.module.css";
 import CustomSelect from "../../components/CustomSelect";
 import Footer from "../../components/Footer";
+import { apiCall } from "../../lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -37,19 +38,24 @@ export default function RegisterPage() {
       return;
     }
 
-    // Імітація реєстрації
     try {
-      const user = { 
-        email, 
-        firstName, 
-        lastName, 
-        role, 
-        registeredAt: new Date().toISOString() 
-      };
-      localStorage.setItem("currentUser", JSON.stringify(user));
+      // 1. Register user on backend
+      await apiCall("/auth/register", {
+        method: "POST",
+        body: { email, password, firstName, lastName, role },
+      });
+
+      // 2. Perform auto-login to retrieve token and user data
+      const loginRes = await apiCall("/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
+
+      localStorage.setItem("token", loginRes.token);
+      localStorage.setItem("currentUser", JSON.stringify(loginRes));
       router.push("/dashboard");
-    } catch (err) {
-      setError("Помилка при реєстрації. Спробуйте ще раз.");
+    } catch (err: any) {
+      setError(err.message || "Помилка при реєстрації. Спробуйте ще раз.");
       setLoading(false);
     }
   };
