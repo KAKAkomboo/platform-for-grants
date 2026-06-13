@@ -226,3 +226,62 @@
 .footerLink a:hover {
   color: var(--primary);
 }
+
+/* ================================
+   MOBILE RESPONSIVE
+================================ */
+@media (max-width: 600px) {
+  .header {
+    padding: 16px;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+    gap: 8px;
+  }
+
+  .main {
+    padding: 20px 16px;
+    align-items: flex-start;
+  }
+
+  .formWrapper {
+    max-width: 100%;
+  }
+
+  .formHeader {
+    margin-bottom: 20px;
+    gap: 8px;
+  }
+
+  .formHeader h2 {
+    font-size: 1.35rem;
+  }
+
+  .form {
+    gap: 14px;
+  }
+
+  .input,
+  .select {
+    padding: 13px 14px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+
+  .customSelectTrigger {
+    padding: 13px 14px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+
+  .customSelectMenu {
+    max-height: 180px;
+  }
+
+  .footerLink {
+    margin-top: 18px;
+    font-size: 0.9rem;
+  }
+}
+
