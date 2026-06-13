@@ -36,9 +36,10 @@ interface NewGrant {
 export default function Home() {
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [userLoading, setUserLoading] = useState<boolean>(true);
   const [grants, setGrants] = useState<Grant[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const [grantsLoading, setGrantsLoading] = useState<boolean>(true);
 
   const [newGrant, setNewGrant] = useState<NewGrant>({
     name: "",
@@ -82,6 +83,8 @@ export default function Home() {
     const storedUser = localStorage.getItem("currentUser");
     const parsedUser: User | null = storedUser ? JSON.parse(storedUser) : null;
     setUser(parsedUser);
+    setUserLoading(false);
+    setIsMounted(true);
 
     const init = async () => {
       await fetchGrants();
@@ -96,8 +99,7 @@ export default function Home() {
         firstName: parsedUser?.firstName || "",
         lastName: parsedUser?.lastName || "",
       });
-      setLoading(false);
-      setIsMounted(true);
+      setGrantsLoading(false);
     };
     init();
   }, []);
@@ -179,7 +181,6 @@ export default function Home() {
     }
   };
 
-  if (!isMounted) return null;
 
   return (
     <div className={styles.wrapper}>
@@ -206,7 +207,7 @@ export default function Home() {
               <span>GrantHub UA</span>
             </Link>
             <div className={styles.authButtons}>
-              {!loading && user ? (
+              {isMounted && !userLoading && user ? (
                 <>
                   <span style={{ marginRight: 16, fontWeight: 500 }}>
                     {user.email}
@@ -244,7 +245,7 @@ export default function Home() {
                 та громадських ініціатив в один клік.
               </p>
               <div className={styles.heroCta}>
-                {!loading && user ? (
+                {isMounted && !userLoading && user ? (
                   <Link href="/dashboard" className="btn btn-primary">
                     Переглянути гранти
                   </Link>
@@ -360,7 +361,7 @@ export default function Home() {
         <div className="container">
           <h2>Список грантів</h2>
 
-          {!loading && user ? (
+          {isMounted && !userLoading && user ? (
             <div className={styles.addGrantCard}>
               <h3>Додати новий грант</h3>
               <div className={styles.formRow}>
@@ -450,7 +451,12 @@ export default function Home() {
           )}
 
           <div className={styles.grantsList}>
-            {grants.length === 0 ? (
+            {grantsLoading ? (
+              <div className={styles.loaderContainer}>
+                <div className={styles.spinner}></div>
+                <p>Завантаження грантів...</p>
+              </div>
+            ) : grants.length === 0 ? (
               <p className={styles.emptyState}>
                 Грантів ще не додано. Додайте перший грант!
               </p>

@@ -52,3 +52,7 @@ export const GrantSchema = SchemaFactory.createForClass(Grant);
 
 // Indexing for search
 GrantSchema.index({ title: 'text', description: 'text', organizer: 'text' });
+
+// Indexing for query sorting and filtering performance
+GrantSchema.index({ status: 1, createdAt: -1 });
+GrantSchema.index({ status: 1, viewsCount: -1 });
