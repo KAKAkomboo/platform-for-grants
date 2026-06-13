@@ -25,9 +25,9 @@ export default function ContactPage() {
           <h1>Контакти</h1>
           <p>Маєте питання? Звяжіться з нами:</p>
           <div style={{marginTop:28}}>
-            <p className="contactInfo"><strong>Email:</strong></p>
+            <p className="contactInfo"><strong>Email:✉️</strong></p>
             <p className="contactInfo"><a href="mailto:hello@granthub.ua">hello@granthub.ua</a></p>
-            <p className="contactInfo" style={{marginTop:20}}><strong>Телефон:</strong></p>
+            <p className="contactInfo" style={{marginTop:20}}><strong>Телефон:📞</strong></p>
             <p className="contactInfo"><a href="tel:+380442111111">+38 (044) 211-11-11</a></p>
             <p className="contactInfo" style={{marginTop:20, fontSize: "0.9rem", color: "#999"}}>Час відповіді: 1–3 робочих дні</p>
           </div>
