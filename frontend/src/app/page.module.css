@@ -254,7 +254,8 @@
   /* Footer */
   .footer {
     padding: 40px 0 24px;
-    border-radius: 20px 20px 0 0;
+    border-radius: 0;
+    width: 100%;
   }
   .footerInner {
     flex-direction: column;
@@ -263,24 +264,33 @@
   }
   .footerLinks {
     margin-left: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 24px;
     width: 100%;
   }
   .footerDesc {
     max-width: 100%;
     margin-top: 16px;
+    line-height: 1.6;
   }
 }
 
 @media (max-width: 480px) {
-  /* Header: show only icon on very small screens */
+  /* Header */
+  .header {
+    background-color: var(--dark);
+    border-bottom: none;
+  }
+  .header .logo {
+    color: var(--white);
+  }
   .header .logo span {
-    display: none;
+    display: block; /* Ensure it is visible */
+    color: var(--white);
   }
   .logo {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   /* Footer mobile optimization */

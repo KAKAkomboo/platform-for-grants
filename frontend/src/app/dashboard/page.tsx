@@ -280,7 +280,7 @@ export default function DashboardPage() {
               <span>GrantHub UA</span>
             </Link>
             <div className={styles.userActions}>
-              <span className={styles.userName}>{user.email}</span>
+              <span className={`${styles.userName} ${styles.desktopOnly}`}>{user.email}</span>
               <button onClick={handleLogout} className="btn btn-secondary">
                 Вихід
               </button>
@@ -298,6 +298,7 @@ export default function DashboardPage() {
                   {(nickname || user.email.charAt(0)).charAt(0).toUpperCase()}
                 </div>
                 <h2>{nickname || user.email}</h2>
+                {nickname && <p className={styles.emailText}>{user.email}</p>}
                 <p className={styles.role}>{roleLabel}</p>
               </div>
 
