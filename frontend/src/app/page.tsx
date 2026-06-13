@@ -9,12 +9,26 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [grants, setGrants] = useState<any[]>([]);
-  const [newGrant, setNewGrant] = useState({ name: "", age: "", link: "" });
+  const [newGrant, setNewGrant] = useState({ 
+    name: "", 
+    age: "", 
+    link: "",
+    deadline: "",
+    firstName: "",
+    lastName: ""
+  });
 
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      // Автоматично заповнюємо ім'я та прізвище
+      setNewGrant((prev) => ({
+        ...prev,
+        firstName: parsedUser.firstName || "",
+        lastName: parsedUser.lastName || "",
+      }));
     }
     
     const storedGrants = localStorage.getItem("grants");
@@ -26,11 +40,15 @@ export default function Home() {
   }, []);
 
   const addGrant = () => {
-    if (newGrant.name.trim() && newGrant.age.trim() && newGrant.link.trim()) {
-      const updatedGrants = [...grants, { ...newGrant, id: Date.now() }];
+    if (newGrant.name.trim() && newGrant.age.trim() && newGrant.link.trim() && newGrant.deadline.trim() && newGrant.firstName.trim() && newGrant.lastName.trim()) {
+      const updatedGrants = [...grants, { 
+        ...newGrant, 
+        id: Date.now(),
+        authorEmail: user.email 
+      }];
       setGrants(updatedGrants);
       localStorage.setItem("grants", JSON.stringify(updatedGrants));
-      setNewGrant({ name: "", age: "", link: "" });
+      setNewGrant({ name: "", age: "", link: "", deadline: "", firstName: "", lastName: "" });
     }
   };
 
@@ -127,45 +145,90 @@ export default function Home() {
           <h2>Список грантів</h2>
 
           {/* Add Grant Form */}
-          <div className={styles.addGrantCard}>
-            <h3>Додати новий грант</h3>
-            <div className={styles.formGroup}>
-              <input
-                type="text"
-                placeholder="Назва гранту"
-                value={newGrant.name}
-                onChange={(e) =>
-                  setNewGrant({ ...newGrant, name: e.target.value })
-                }
-                className={styles.input}
-              />
+          {!loading && user ? (
+            <div className={styles.addGrantCard}>
+              <h3>Додати новий грант</h3>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Назва гранту"
+                    value={newGrant.name}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, name: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Вік"
+                    value={newGrant.age}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, age: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+              <div className={styles.formGroup}>
+                <input
+                  type="url"
+                  placeholder="Посилання на грант"
+                  value={newGrant.link}
+                  onChange={(e) =>
+                    setNewGrant({ ...newGrant, link: e.target.value })
+                  }
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>До коли подавати заявку</label>
+                  <input
+                    type="date"
+                    value={newGrant.deadline}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, deadline: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Прізвище"
+                    value={newGrant.lastName}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, lastName: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <input
+                    type="text"
+                    placeholder="Ім'я"
+                    value={newGrant.firstName}
+                    onChange={(e) =>
+                      setNewGrant({ ...newGrant, firstName: e.target.value })
+                    }
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+              <button onClick={addGrant} className="btn btn-primary">
+                Додати грант
+              </button>
             </div>
-            <div className={styles.formGroup}>
-              <input
-                type="text"
-                placeholder="Вік"
-                value={newGrant.age}
-                onChange={(e) =>
-                  setNewGrant({ ...newGrant, age: e.target.value })
-                }
-                className={styles.input}
-              />
+          ) : (
+            <div className={styles.loginPrompt}>
+              <p>Щоб додавати гранти, будь ласка, <Link href="/login">увійдіть</Link> або <Link href="/register">зареєструйтеся</Link></p>
             </div>
-            <div className={styles.formGroup}>
-              <input
-                type="url"
-                placeholder="Посилання на грант"
-                value={newGrant.link}
-                onChange={(e) =>
-                  setNewGrant({ ...newGrant, link: e.target.value })
-                }
-                className={styles.input}
-              />
-            </div>
-            <button onClick={addGrant} className="btn btn-primary">
-              Додати грант
-            </button>
-          </div>
+          )}
 
           {/* Grants List */}
           <div className={styles.grantsList}>
@@ -181,6 +244,12 @@ export default function Home() {
                     <p className={styles.grantAge}>
                       <strong>Вік:</strong> {grant.age}
                     </p>
+                    <p className={styles.grantDeadline}>
+                      <strong>До:</strong> {new Date(grant.deadline).toLocaleDateString('uk-UA')}
+                    </p>
+                    <p className={styles.grantAuthor}>
+                      <strong>Автор:</strong> {grant.firstName} {grant.lastName}
+                    </p>
                     <a
                       href={grant.link}
                       target="_blank"
@@ -190,13 +259,17 @@ export default function Home() {
                       Перейти до гранту →
                     </a>
                   </div>
-                  <button
-                    onClick={() => deleteGrant(grant.id)}
-                    className={styles.deleteBtn}
-                    title="Видалити грант"
-                  >
-                    ✕
-                  </button>
+                  {user && user.email === grant.authorEmail && (
+                    <div className={styles.grantActions}>
+                      <button
+                        onClick={() => deleteGrant(grant.id)}
+                        className={styles.deleteBtn}
+                        title="Видалити грант"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             )}

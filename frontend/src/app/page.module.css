@@ -292,6 +292,27 @@
   margin-bottom: 16px;
 }
 
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
 .input {
   width: 100%;
   padding: 12px 14px;
@@ -334,6 +355,7 @@
 
 .grantContent {
   flex: 1;
+  padding-right: 40px;
 }
 
 .grantCard h4 {
@@ -349,12 +371,16 @@
   line-height: 1.5;
 }
 
-.grantAge {
+.grantAge,
+.grantDeadline,
+.grantAuthor {
   margin: 8px 0 12px !important;
   font-size: 0.95rem;
 }
 
-.grantAge strong {
+.grantAge strong,
+.grantDeadline strong,
+.grantAuthor strong {
   color: var(--text-dark);
 }
 
@@ -370,9 +396,9 @@
 }
 
 .deleteBtn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  position: relative;
+  top: 0;
+  right: 0;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -391,10 +417,41 @@
   background-color: #ffc9c9;
 }
 
+.grantActions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
 .emptyState {
   text-align: center;
   padding: 40px 20px;
   color: var(--text-muted);
   font-size: 1rem;
+}
+
+.loginPrompt {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(25, 26, 35, 0.04);
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.loginPrompt p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.loginPrompt a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.loginPrompt a:hover {
+  text-decoration: underline;
 }
 
