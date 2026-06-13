@@ -81,6 +81,23 @@
   border: 1px solid #191A23;
 }
 
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tagBadge {
+  background: #f0f9e8;
+  border: 1px solid #c8f09a;
+  color: #3a7a00;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .section {
   margin-bottom: 24px;
 }
