@@ -185,158 +185,343 @@
   color: #adadad;
 }
 
-/* Responsive design */
-@media (max-width: 1024px) {
-  .heroTitle {
-    font-size: 3rem;
-  }
+/* ================================
+   TABLET (769px - 1024px)
+================================ */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .heroTitle { font-size: 2.8rem; }
+  .heroGrid { gap: 24px; }
+  .grantsList { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ================================
+   MOBILE (max 768px)
+================================ */
 @media (max-width: 768px) {
   /* Header */
   .header {
-    padding: 14px 0;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(25, 26, 35, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
+
   .headerInner {
     flex-direction: row;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    gap: 8px;
   }
+
   .logo {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     gap: 8px;
   }
+
   .authButtons {
+    gap: 6px;
     margin-left: auto;
-    gap: 8px;
+  }
+
+  /* Hide long email label on mobile */
+  .authButtons > span {
+    display: none;
   }
 
   /* Hero */
   .hero {
-    padding: 40px 0;
+    padding: 32px 0 24px;
   }
+
   .heroGrid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 0;
   }
+
+  .heroRight {
+    display: none;
+  }
+
   .heroTitle {
-    font-size: 2.4rem;
+    font-size: 2.1rem;
+    line-height: 1.2;
+    margin-bottom: 14px;
   }
+
   .heroDescription {
-    font-size: 1.1rem;
-    margin-bottom: 28px;
+    font-size: 1rem;
+    margin-bottom: 20px;
     max-width: 100%;
   }
-  .heroRight {
-    order: -1;
+
+  .heroCta {
+    width: 100%;
   }
-  .heroIllustration {
-    max-width: 280px;
-    margin: 0 auto;
+
+  .heroCta a,
+  .heroCta .btn {
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  /* Partners */
+  .partners {
+    padding: 16px 0;
+  }
+
+  .partnersInner {
+    gap: 20px;
+    min-width: 480px;
+  }
+
+  .partnerLogo {
+    font-size: 0.8rem;
   }
 
   /* Grants section */
   .grantsSection {
-    padding: 40px 0;
+    padding: 28px 0 48px;
   }
+
   .grantsSection h2 {
-    font-size: 1.6rem;
-    margin-bottom: 28px;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
   }
+
+  /* Toolbar */
+  .toolbar {
+    padding: 16px;
+    gap: 12px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .searchBox {
+    border-radius: 8px;
+  }
+
+  .searchInput {
+    padding: 11px 10px;
+    font-size: 0.95rem;
+  }
+
+  .searchBtn {
+    padding: 11px 14px;
+    font-size: 0.9rem;
+  }
+
+  .filtersRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filterGroup {
+    min-width: 100%;
+  }
+
+  .filterSelect {
+    padding: 11px 14px;
+    font-size: 0.9rem;
+  }
+
+  .clearFiltersBtn {
+    width: 100%;
+    text-align: center;
+    padding: 10px 14px;
+  }
+
+  .tagsFilter {
+    gap: 8px;
+  }
+
+  .tagsList {
+    gap: 6px;
+  }
+
+  .tagFilterBtn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* Grants list - single column */
   .grantsList {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
+
   .grantCard {
-    padding: 16px;
+    padding: 14px 14px 16px;
+    border-radius: 10px;
+  }
+
+  .grantHeader h4 {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .grantHeader h4 a {
+    font-size: 1rem;
+  }
+
+  .grantTagsList {
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .grantTag {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+  }
+
+  .grantContent {
+    padding-right: 0;
+  }
+
+  .grantAge,
+  .grantDeadline,
+  .grantAuthor {
+    font-size: 0.88rem;
+    margin: 5px 0 8px !important;
+  }
+
+  .grantLink {
+    font-size: 0.9rem;
+  }
+
+  .favoriteBtn,
+  .favoriteBtnActive {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .deleteBtn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1rem !important;
+  }
+
+  /* Pagination */
+  .pagination {
+    gap: 6px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+
+  .pageBtn {
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    border-radius: 8px;
+  }
+
+  /* Create grant form */
+  .addGrantCard {
+    padding: 18px 14px;
+    border-radius: 10px;
+  }
+
+  .addGrantCard h3 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .formGroup {
+    margin-bottom: 12px;
+  }
+
+  .input {
+    padding: 11px 12px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+  }
+
+  .loginPrompt {
+    padding: 20px 16px;
+    border-radius: 10px;
   }
 
   /* Footer */
   .footer {
-    padding: 40px 0 24px;
+    padding: 32px 0 20px;
     border-radius: 0;
-    width: 100%;
   }
+
   .footerInner {
     flex-direction: column;
-    gap: 32px;
-    margin-bottom: 32px;
+    gap: 24px;
+    margin-bottom: 20px;
   }
+
   .footerLinks {
     margin-left: 0;
-    display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     width: 100%;
   }
+
   .footerDesc {
     max-width: 100%;
-    margin-top: 16px;
-    line-height: 1.6;
+    margin-top: 12px;
+    font-size: 0.9rem;
+  }
+
+  .footerBottom {
+    padding-top: 20px;
+    font-size: 0.85rem;
   }
 }
 
+/* ================================
+   SMALL PHONES (max 480px)
+================================ */
 @media (max-width: 480px) {
-  /* Header */
-  .header {
-    background-color: var(--dark);
-    border-bottom: none;
-  }
-  .header .logo {
-    color: var(--white);
-  }
-  .header .logo span {
-    display: block; /* Ensure it is visible */
-    color: var(--white);
-  }
-  .logo {
-    font-size: 1.1rem;
-  }
-
-  /* Footer mobile optimization */
-  .footer {
-    padding: 32px 0 20px;
-  }
-  .footerInner {
-    gap: 24px;
-    margin-bottom: 24px;
-  }
-  .footerLinks {
-    gap: 20px;
-  }
-  .footerBottom {
-    padding-top: 20px;
-  }
-
-  /* Hero */
   .heroTitle {
-    font-size: 1.9rem;
+    font-size: 1.75rem;
+    margin-bottom: 12px;
+  }
+
+  .heroDescription {
+    font-size: 0.95rem;
     margin-bottom: 18px;
   }
-  .heroDescription {
-    font-size: 1rem;
-    margin-bottom: 22px;
-  }
-  .heroCta .btn {
-    width: 100%;
-    justify-content: center;
+
+  .authButtons .btn {
+    padding: 9px 14px;
+    font-size: 0.85rem;
+    border-radius: 8px;
   }
 
-  /* Add grant form */
-  .addGrantCard {
-    padding: 20px 16px;
+  .toolbar {
+    padding: 12px;
+    gap: 10px;
   }
 
-  /* Grant card actions */
-  .grantActions {
-    position: static;
-    margin-top: 12px;
-    display: flex;
+  .searchInput {
+    font-size: 0.9rem;
+  }
+
+  .grantCard {
+    padding: 12px;
+  }
+
+  .grantHeader {
     gap: 8px;
-    flex-wrap: wrap;
+    margin-bottom: 8px;
   }
-  .grantContent {
-    padding-right: 0;
+
+  .activeBadges {
+    gap: 6px;
+  }
+
+  .activeBadge {
+    font-size: 0.78rem;
+    padding: 4px 8px 4px 10px;
   }
 }
 
@@ -638,158 +823,8 @@
 .contactInfo p, .contactInfo a { margin: 0 0 10px; color: var(--text-dark); }
 .contactInfo a { color: var(--primary); text-decoration: none; }
 
-/* ================================
-   MOBILE (max 768px)
-================================ */
-@media (max-width: 768px) {
-  /* Header */
-  .headerInner {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-  }
 
-  .logo {
-    font-size: 1.2rem;
-  }
 
-  .authButtons {
-    gap: 8px;
-  }
-
-  /* Hide email on mobile */
-  .authButtons span {
-    display: none;
-  }
-
-  /* Hero */
-  .hero {
-    padding: 32px 0;
-  }
-
-  .heroGrid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .heroRight {
-    display: none;
-  }
-
-  .heroTitle {
-    font-size: 2rem;
-    margin-bottom: 16px;
-  }
-
-  .heroDescription {
-    font-size: 1rem;
-    margin-bottom: 24px;
-    max-width: 100%;
-  }
-
-  .heroCta a {
-    width: 100%;
-    text-align: center;
-  }
-
-  /* Partners */
-  .partners {
-    padding: 20px 0;
-  }
-
-  .partnersInner {
-    gap: 20px;
-    min-width: 500px;
-  }
-
-  .partnerLogo {
-    font-size: 0.85rem;
-  }
-
-  /* Grants section */
-  .grantsSection {
-    padding: 32px 0;
-  }
-
-  .grantsSection h2 {
-    font-size: 1.5rem;
-    margin-bottom: 24px;
-  }
-
-  .addGrantCard {
-    padding: 20px 16px;
-  }
-
-  .formRow {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .grantsList {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .grantCard {
-    padding: 16px;
-  }
-
-  /* Footer */
-  .footer {
-    padding: 40px 0 24px;
-  }
-
-  .footerInner {
-    flex-direction: column;
-    gap: 32px;
-    margin-bottom: 24px;
-  }
-
-  .footerLinks {
-    margin-left: 0;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .footerDesc {
-    max-width: 100%;
-  }
-
-  /* Helpers */
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .teamGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ================================
-   TABLET (max 1024px)
-================================ */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .heroTitle {
-    font-size: 2.8rem;
-  }
-
-  .heroGrid {
-    gap: 24px;
-  }
-
-  .grantsList {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .teamGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .grid {
-    grid-template-columns: 1fr 300px;
-  }
-}
 
 .loaderContainer {
   grid-column: 1 / -1;
