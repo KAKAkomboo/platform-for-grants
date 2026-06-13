@@ -26,6 +26,9 @@ export class Grant {
   @Prop({ type: [String], default: [] })
   targetAudience: string[]; // 'student', 'startup', 'ngo'
 
+  @Prop({ type: [String], default: [] })
+  tags: string[];
+
   @Prop({ required: true })
   sourceUrl: string;
 
@@ -51,7 +54,7 @@ export class Grant {
 export const GrantSchema = SchemaFactory.createForClass(Grant);
 
 // Indexing for search
-GrantSchema.index({ title: 'text', description: 'text', organizer: 'text' });
+GrantSchema.index({ title: 'text', description: 'text', organizer: 'text', tags: 'text' });
 
 // Indexing for query sorting and filtering performance
 GrantSchema.index({ status: 1, createdAt: -1 });
