@@ -15,7 +15,7 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<{ message: string }> {
-    const { email, password } = registerDto;
+    const { email, password, firstName, lastName, role: dtoRole } = registerDto;
 
     const existingUser = await this.userModel.findOne({ email }).exec();
     if (existingUser) {
@@ -27,19 +27,23 @@ export class AuthService {
 
     // Make the first user an admin for easy testing during hackathon
     const count = await this.userModel.countDocuments().exec();
-    const role = count === 0 ? 'admin' : 'user';
+    const role = count === 0 ? 'admin' : (dtoRole || 'user');
 
     const newUser = new this.userModel({
       email,
       passwordHash,
       role,
+      firstName: firstName || '',
+      lastName: lastName || '',
+      nickname: firstName ? `${firstName} ${lastName || ''}`.trim() : email.split('@')[0],
+      profileType: (dtoRole === 'student' || dtoRole === 'startup' || dtoRole === 'ngo') ? dtoRole : '',
     });
 
     await newUser.save();
     return { message: 'Реєстрація успішна' };
   }
 
-  async login(loginDto: LoginDto): Promise<{ token: string; email: string; role: string }> {
+  async login(loginDto: LoginDto): Promise<{ token: string; email: string; role: string; firstName?: string; lastName?: string; nickname?: string; avatarColor?: string; profileType?: string; }> {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email }).exec();
@@ -59,6 +63,11 @@ export class AuthService {
       token,
       email: user.email,
       role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      nickname: user.nickname,
+      avatarColor: user.avatarColor,
+      profileType: user.profileType,
     };
   }
 

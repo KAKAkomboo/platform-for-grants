@@ -56,6 +56,22 @@
   .grid {
     grid-template-columns: 1fr;
   }
+  .desktopOnly {
+    display: none !important;
+  }
+}
+@media (max-width: 480px) {
+  .header {
+    background-color: var(--dark);
+    border-bottom: none;
+  }
+  .header .logo {
+    color: var(--white);
+  }
+  .header .logo span {
+    display: block;
+    color: var(--white);
+  }
 }
 
 .sidebar {
@@ -69,6 +85,10 @@
   border-radius: 12px;
   padding: 24px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 8px rgba(25, 26, 35, 0.04);
 }
 
@@ -110,12 +130,20 @@
   margin: 0 0 8px;
   font-size: 1.1rem;
   color: var(--text-dark);
+  word-break: break-all;
 }
 
 .role {
   margin: 0;
   font-size: 0.9rem;
   color: var(--text-muted);
+}
+
+.emailText {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  word-break: break-all;
 }
 
 .menu {
@@ -128,7 +156,7 @@
 .menuItem {
   display: block;
   width: 100%;
-  padding: 14px 16px;
+  padding: 16px 20px;
   text-decoration: none;
   color: var(--text-dark);
   background: transparent;

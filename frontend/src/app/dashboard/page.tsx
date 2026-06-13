@@ -109,8 +109,13 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setNickname(parsedUser.nickname || "");
+      setAvatarColor(parsedUser.avatarColor || "primary");
+    } else {
       router.push("/login");
       return;
     }
@@ -275,7 +280,7 @@ export default function DashboardPage() {
               <span>GrantHub UA</span>
             </Link>
             <div className={styles.userActions}>
-              <span className={styles.userName}>{user.email}</span>
+              <span className={`${styles.userName} ${styles.desktopOnly}`}>{user.email}</span>
               <button onClick={handleLogout} className="btn btn-secondary">
                 Вихід
               </button>
@@ -293,6 +298,7 @@ export default function DashboardPage() {
                   {(nickname || user.email.charAt(0)).charAt(0).toUpperCase()}
                 </div>
                 <h2>{nickname || user.email}</h2>
+                {nickname && <p className={styles.emailText}>{user.email}</p>}
                 <p className={styles.role}>{roleLabel}</p>
               </div>
 

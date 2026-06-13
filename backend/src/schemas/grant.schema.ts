@@ -32,6 +32,15 @@ export class Grant {
   @Prop({ required: true, default: 'active' })
   status: string; // 'active' | 'archived'
 
+  @Prop({ default: '' })
+  authorEmail: string;
+
+  @Prop({ default: '' })
+  firstName: string;
+
+  @Prop({ default: '' })
+  lastName: string;
+
   @Prop({ default: 0 })
   viewsCount: number;
 
