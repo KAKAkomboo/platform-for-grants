@@ -1,7 +1,49 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
+import HomeFooter from "../components/HomeFooter";
 
 export default function Home() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [grants, setGrants] = useState<any[]>([]);
+  const [newGrant, setNewGrant] = useState({ name: "", age: "", link: "" });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    
+    const storedGrants = localStorage.getItem("grants");
+    if (storedGrants) {
+      setGrants(JSON.parse(storedGrants));
+    }
+    
+    setLoading(false);
+  }, []);
+
+  const addGrant = () => {
+    if (newGrant.name.trim() && newGrant.age.trim() && newGrant.link.trim()) {
+      const updatedGrants = [...grants, { ...newGrant, id: Date.now() }];
+      setGrants(updatedGrants);
+      localStorage.setItem("grants", JSON.stringify(updatedGrants));
+      setNewGrant({ name: "", age: "", link: "" });
+    }
+  };
+
+  const deleteGrant = (id: number) => {
+    const updatedGrants = grants.filter((g) => g.id !== id);
+    setGrants(updatedGrants);
+    localStorage.setItem("grants", JSON.stringify(updatedGrants));
+  };
+
+  if (!isMounted) return null;
+
   return (
     <div className={styles.wrapper}>
       {/* Header */}
@@ -17,8 +59,17 @@ export default function Home() {
               <span>GrantHub UA</span>
             </Link>
             <div className={styles.authButtons}>
-              <Link href="/login" className="btn btn-secondary">Вхід</Link>
-              <Link href="/register" className="btn btn-primary">Реєстрація</Link>
+              {!loading && user ? (
+                <>
+                  <span style={{marginRight: 16, fontWeight: 500}}>{user.email}</span>
+                  <Link href="/dashboard" className="btn btn-primary">Мій кабінет</Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="btn btn-secondary">Вхід</Link>
+                  <Link href="/register" className="btn btn-primary">Реєстрація</Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -36,7 +87,11 @@ export default function Home() {
                 Ми автоматично збираємо та структуруємо грантові можливості з десятків ресурсів. Знаходьте фінансування для стартапів, освіти та громадських ініціатив в один клік.
               </p>
               <div className={styles.heroCta}>
-                <Link href="/register" className="btn btn-primary">Створити акаунт</Link>
+                {!loading && user ? (
+                  <Link href="/dashboard" className="btn btn-primary">Переглянути гранти</Link>
+                ) : (
+                  <Link href="/register" className="btn btn-primary">Створити акаунт</Link>
+                )}
               </div>
             </div>
             <div className={styles.heroRight}>
@@ -70,29 +125,90 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className={styles.footer}>
+      {/* Grants Section */}
+      <section className={styles.grantsSection}>
         <div className="container">
-          <div className={styles.footerInner}>
-            <div className={styles.footerInfo}>
-              <Link href="/" className={styles.logo}>
-                <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="36" height="36" rx="6" fill="#B9FF66"/>
-                  <path d="M10 26V10H16.5C18.9853 10 21 12.0147 21 14.5C21 16.9853 18.9853 19 16.5 19H13V26H10ZM13 16H16.5C17.3284 16 18 15.3284 18 14.5C18 13.6716 17.3284 13 16.5 13H13V16Z" fill="#191A23"/>
-                  <circle cx="26" cy="22" r="4" fill="#191A23"/>
-                </svg>
-                <span className={styles.footerLogoText}>GrantHub UA</span>
-              </Link>
-              <p className={styles.footerDesc}>
-                Автоматичний агрегатор грантових можливостей в Україні. Зручний інструмент для студентів, стартаперів та некомерційного сектору.
-              </p>
+          <h2>Список грантів</h2>
+
+          {/* Add Grant Form */}
+          <div className={styles.addGrantCard}>
+            <h3>Додати новий грант</h3>
+            <div className={styles.formGroup}>
+              <input
+                type="text"
+                placeholder="Назва гранту"
+                value={newGrant.name}
+                onChange={(e) =>
+                  setNewGrant({ ...newGrant, name: e.target.value })
+                }
+                className={styles.input}
+              />
             </div>
+            <div className={styles.formGroup}>
+              <input
+                type="text"
+                placeholder="Вік"
+                value={newGrant.age}
+                onChange={(e) =>
+                  setNewGrant({ ...newGrant, age: e.target.value })
+                }
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <input
+                type="url"
+                placeholder="Посилання на грант"
+                value={newGrant.link}
+                onChange={(e) =>
+                  setNewGrant({ ...newGrant, link: e.target.value })
+                }
+                className={styles.input}
+              />
+            </div>
+            <button onClick={addGrant} className="btn btn-primary">
+              Додати грант
+            </button>
           </div>
-          <div className={styles.footerBottom}>
-            <p>&copy; {new Date().getFullYear()} GrantHub UA. Створено для хакатону.</p>
+
+          {/* Grants List */}
+          <div className={styles.grantsList}>
+            {grants.length === 0 ? (
+              <p className={styles.emptyState}>
+                Грантів ще не додано. Додайте перший грант!
+              </p>
+            ) : (
+              grants.map((grant) => (
+                <div key={grant.id} className={styles.grantCard}>
+                  <div className={styles.grantContent}>
+                    <h4>{grant.name}</h4>
+                    <p className={styles.grantAge}>
+                      <strong>Вік:</strong> {grant.age}
+                    </p>
+                    <a
+                      href={grant.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.grantLink}
+                    >
+                      Перейти до гранту →
+                    </a>
+                  </div>
+                  <button
+                    onClick={() => deleteGrant(grant.id)}
+                    className={styles.deleteBtn}
+                    title="Видалити грант"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </div>
-      </footer>
+      </section>
+
+      <HomeFooter />
     </div>
   );
 }
