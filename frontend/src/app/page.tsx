@@ -9,16 +9,10 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [grants, setGrants] = useState<any[]>([]);
-  const [newGrant, setNewGrant] = useState({ 
-    name: "", 
-    age: "", 
-    link: "",
-    deadline: "",
-    firstName: "",
-    lastName: ""
-  });
+  const [newGrant, setNewGrant] = useState({ name: "", age: "", link: "" });
 
   useEffect(() => {
+    setIsMounted(true);
     const storedUser = localStorage.getItem("currentUser");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -57,6 +51,8 @@ export default function Home() {
     setGrants(updatedGrants);
     localStorage.setItem("grants", JSON.stringify(updatedGrants));
   };
+
+  if (!isMounted) return null;
 
   return (
     <div className={styles.wrapper}>
