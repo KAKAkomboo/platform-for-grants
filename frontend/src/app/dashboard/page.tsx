@@ -329,15 +329,42 @@ export default function DashboardPage() {
               {activeView === "dashboard" && (
                 <div className={styles.card}>
                   <h1>Ласкаво просимо, {nickname || user.email.split("@")[0]}!</h1>
-                  <p>Ви успішно увійшли до свого кабінету. Тут ви можете переглядати гранти, що відповідають вашому профілю.</p>
-                  <ul style={{ marginTop: 16, lineHeight: 2 }}>
-                    <li><strong>Email:</strong> {user.email}</li>
-                    <li><strong>Ім'я:</strong> {user.firstName} {user.lastName}</li>
-                    <li><strong>Тип профілю:</strong> {roleLabel}</li>
-                    <li><strong>Категорії:</strong> {(user.categories || []).join(", ") || "не вказано"}</li>
-                    <li><strong>Обраних грантів:</strong> {favorites.length}</li>
-                    <li><strong>Моїх грантів:</strong> {myGrants.length}</li>
-                  </ul>
+                  <p>Ви успішно увійшли до свого кабінету. Тут ви можете керувати вашими грантами, налаштовувати профіль та переглядати рекомендації.</p>
+                  
+                  <div className={styles.infoGrid}>
+                    <div className={styles.infoCard}>
+                      <h3>Обрані гранти</h3>
+                      <p className={styles.number}>{favorites.length}</p>
+                    </div>
+                    <div className={styles.infoCard}>
+                      <h3>Мої гранти</h3>
+                      <p className={styles.number}>{myGrants.length}</p>
+                    </div>
+                    <div className={styles.infoCard}>
+                      <h3>Рекомендації</h3>
+                      <p className={styles.number}>{recommendations.length}</p>
+                    </div>
+                  </div>
+
+                  <div className={styles.profileDetails}>
+                    <h3>Деталі профілю</h3>
+                    <div className={styles.detailRow}>
+                      <span>Email:</span>
+                      <strong>{user.email}</strong>
+                    </div>
+                    <div className={styles.detailRow}>
+                      <span>Ім'я користувача:</span>
+                      <strong>{user.firstName || user.lastName ? `${user.firstName} ${user.lastName}` : "Не вказано"}</strong>
+                    </div>
+                    <div className={styles.detailRow}>
+                      <span>Тип профілю:</span>
+                      <strong>{roleLabel}</strong>
+                    </div>
+                    <div className={styles.detailRow}>
+                      <span>Обрані категорії:</span>
+                      <strong>{(user.categories || []).join(", ") || "Не вказано"}</strong>
+                    </div>
+                  </div>
                 </div>
               )}
 
