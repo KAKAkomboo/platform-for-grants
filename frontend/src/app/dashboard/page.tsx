@@ -109,8 +109,13 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setNickname(parsedUser.nickname || "");
+      setAvatarColor(parsedUser.avatarColor || "primary");
+    } else {
       router.push("/login");
       return;
     }
