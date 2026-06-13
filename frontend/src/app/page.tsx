@@ -40,6 +40,8 @@ export default function Home() {
   const [grants, setGrants] = useState<Grant[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [grantsLoading, setGrantsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 6;
 
   const [newGrant, setNewGrant] = useState<NewGrant>({
     name: "",
@@ -103,6 +105,18 @@ export default function Home() {
     };
     init();
   }, []);
+
+  useEffect(() => {
+    const total = Math.ceil(grants.length / itemsPerPage);
+    if (total > 0 && currentPage > total) {
+      setCurrentPage(total);
+    }
+  }, [grants, currentPage]);
+
+  const totalPages = Math.ceil(grants.length / itemsPerPage);
+  const indexOfLastGrant = currentPage * itemsPerPage;
+  const indexOfFirstGrant = indexOfLastGrant - itemsPerPage;
+  const currentGrants = grants.slice(indexOfFirstGrant, indexOfLastGrant);
 
   const addGrant = async () => {
     if (
@@ -361,8 +375,99 @@ export default function Home() {
         <div className="container">
           <h2>Список грантів</h2>
 
+          <div className={styles.grantsList}>
+            {grantsLoading ? (
+              <div className={styles.loaderContainer}>
+                <div className={styles.spinner}></div>
+                <p>Завантаження грантів...</p>
+              </div>
+            ) : grants.length === 0 ? (
+              <p className={styles.emptyState}>
+                Грантів ще не додано. Додайте перший грант!
+              </p>
+            ) : (
+              currentGrants.map((grant) => (
+                <div key={grant.id} className={styles.grantCard}>
+                  <div className={styles.grantHeader}>
+                    <h4>{grant.name}</h4>
+                    <div className={styles.grantActions}>
+                      {user && (
+                        <button
+                          onClick={() => toggleFavorite(grant.id as string)}
+                          className={favoriteIds.has(grant.id as string) ? styles.favoriteBtnActive : styles.favoriteBtn}
+                          title={favoriteIds.has(grant.id as string) ? "Видалити з обраного" : "До обраного"}
+                        >
+                          {favoriteIds.has(grant.id as string) ? "♥" : "♡"}
+                        </button>
+                      )}
+                      {user && user.email === grant.authorEmail && (
+                        <button
+                          onClick={() => deleteGrant(grant.id)}
+                          className={styles.deleteBtn}
+                          title="Видалити грант"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className={styles.grantContent}>
+                    <p className={styles.grantAge}>
+                      <strong>Вік:</strong> {grant.age}
+                    </p>
+                    <p className={styles.grantDeadline}>
+                      <strong>До:</strong>{" "}
+                      {new Date(grant.deadline).toLocaleDateString("uk-UA")}
+                    </p>
+                    <p className={styles.grantAuthor}>
+                      <strong>Автор:</strong> {grant.firstName} {grant.lastName}
+                    </p>
+                    <a
+                      href={grant.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.grantLink}
+                    >
+                      Перейти до гранту →
+                    </a>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Pagination */}
+          {!grantsLoading && totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={styles.pageBtn}
+              >
+                ← Назад
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`${styles.pageBtn} ${currentPage === page ? styles.activePage : ""}`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={styles.pageBtn}
+              >
+                Вперед →
+              </button>
+            </div>
+          )}
+
+          {/* Create Grant Form */}
           {isMounted && !userLoading && user ? (
-            <div className={styles.addGrantCard}>
+            <div className={styles.addGrantCard} style={{ marginTop: 40 }}>
               <h3>Додати новий грант</h3>
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
@@ -441,7 +546,7 @@ export default function Home() {
               </button>
             </div>
           ) : (
-            <div className={styles.loginPrompt}>
+            <div className={styles.loginPrompt} style={{ marginTop: 40 }}>
               <p>
                 Щоб додавати гранти, будь ласка,{" "}
                 <Link href="/login">увійдіть</Link> або{" "}
@@ -449,65 +554,6 @@ export default function Home() {
               </p>
             </div>
           )}
-
-          <div className={styles.grantsList}>
-            {grantsLoading ? (
-              <div className={styles.loaderContainer}>
-                <div className={styles.spinner}></div>
-                <p>Завантаження грантів...</p>
-              </div>
-            ) : grants.length === 0 ? (
-              <p className={styles.emptyState}>
-                Грантів ще не додано. Додайте перший грант!
-              </p>
-            ) : (
-              grants.map((grant) => (
-                <div key={grant.id} className={styles.grantCard}>
-                  <div className={styles.grantContent}>
-                    <h4>{grant.name}</h4>
-                    <p className={styles.grantAge}>
-                      <strong>Вік:</strong> {grant.age}
-                    </p>
-                    <p className={styles.grantDeadline}>
-                      <strong>До:</strong>{" "}
-                      {new Date(grant.deadline).toLocaleDateString("uk-UA")}
-                    </p>
-                    <p className={styles.grantAuthor}>
-                      <strong>Автор:</strong> {grant.firstName} {grant.lastName}
-                    </p>
-                    <a
-                      href={grant.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.grantLink}
-                    >
-                      Перейти до гранту →
-                    </a>
-                  </div>
-                  <div className={styles.grantActions}>
-                    {user && (
-                      <button
-                        onClick={() => toggleFavorite(grant.id as string)}
-                        className={favoriteIds.has(grant.id as string) ? styles.deleteBtn : "btn btn-primary"}
-                        title={favoriteIds.has(grant.id as string) ? "Видалити з обраного" : "До обраного"}
-                      >
-                        {favoriteIds.has(grant.id as string) ? "♥ Обрано" : "♡ До обраного"}
-                      </button>
-                    )}
-                    {user && user.email === grant.authorEmail && (
-                      <button
-                        onClick={() => deleteGrant(grant.id)}
-                        className={styles.deleteBtn}
-                        title="Видалити грант"
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
         </div>
       </section>
 
