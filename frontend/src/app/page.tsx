@@ -53,21 +53,19 @@ export default function Home() {
     const parsedUser: User | null = storedUser ? JSON.parse(storedUser) : null;
     const parsedGrants: Grant[] = storedGrants ? JSON.parse(storedGrants) : [];
 
-    if (!isMounted) {
-      setUser(parsedUser);
-      setGrants(parsedGrants);
-      setNewGrant({
-        name: "",
-        age: "",
-        link: "",
-        deadline: "",
-        firstName: parsedUser?.firstName || "",
-        lastName: parsedUser?.lastName || "",
-      });
-      setLoading(false);
-      setIsMounted(true);
-    }
-  }, [isMounted, setUser, setGrants, setNewGrant, setLoading, setIsMounted]);
+    setUser(parsedUser);
+    setGrants(parsedGrants);
+    setNewGrant({
+      name: "",
+      age: "",
+      link: "",
+      deadline: "",
+      firstName: parsedUser?.firstName || "",
+      lastName: parsedUser?.lastName || "",
+    });
+    setLoading(false);
+    setIsMounted(true);
+  }, []);
 
   const addGrant = () => {
     if (
