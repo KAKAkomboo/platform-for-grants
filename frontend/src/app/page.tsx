@@ -327,9 +327,12 @@ export default function Home() {
               </p>
               <div className={styles.heroCta}>
                 {isMounted && !userLoading && user ? (
-                  <Link href="/dashboard" className="btn btn-primary">
+                  <button
+                    onClick={() => document.getElementById("grants")?.scrollIntoView({ behavior: "smooth" })}
+                    className="btn btn-primary"
+                  >
                     Переглянути гранти
-                  </Link>
+                  </button>
                 ) : (
                   <Link href="/register" className="btn btn-primary">
                     Створити акаунт
@@ -374,7 +377,7 @@ export default function Home() {
       </section>
 
       {/* Grants Section */}
-      <section className={styles.grantsSection}>
+      <section id="grants" className={styles.grantsSection}>
         <div className="container">
           <h2>Список грантів</h2>
 

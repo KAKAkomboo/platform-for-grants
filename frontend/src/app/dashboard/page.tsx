@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./dashboard.module.css";
-import Footer from "../../components/Footer";
+
 
 import { apiCall } from "../../lib/api";
 
@@ -330,7 +330,7 @@ export default function DashboardPage() {
                 <div className={styles.card}>
                   <h1>Ласкаво просимо, {nickname || user.email.split("@")[0]}!</h1>
                   <p>Ви успішно увійшли до свого кабінету. Тут ви можете керувати вашими грантами, налаштовувати профіль та переглядати рекомендації.</p>
-                  
+
                   <div className={styles.infoGrid}>
                     <div className={styles.infoCard}>
                       <h3>Обрані гранти</h3>
@@ -655,9 +655,8 @@ export default function DashboardPage() {
                               <button
                                 key={color}
                                 onClick={() => setAvatarColor(color)}
-                                className={`${styles.colorOption} ${styles[`color-${color}`]} ${
-                                  avatarColor === color ? styles.selected : ""
-                                }`}
+                                className={`${styles.colorOption} ${styles[`color-${color}`]} ${avatarColor === color ? styles.selected : ""
+                                  }`}
                                 title={color}
                               >
                                 {avatarColor === color && "✓"}
@@ -694,8 +693,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
